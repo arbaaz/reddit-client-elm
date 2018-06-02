@@ -8,7 +8,7 @@ import View.Iframe exposing (renderIframe)
 
 hasPreview : Post -> String
 hasPreview post =
-    Maybe.withDefault "http://place-hold.it/300x500" post.source
+    Maybe.withDefault "//place-hold.it/300x500" post.source
 
 
 renderPost : Post -> Html msg

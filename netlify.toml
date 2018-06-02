@@ -1,0 +1,3 @@
+[build]
+  command = "npm install && elm-app install -y && elm-app build"
+  publish = "dist"
