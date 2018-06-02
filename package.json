@@ -1,7 +1,9 @@
 {
   "name": "reddit-client-elm",
   "version": "1.0.0",
-  "description": "This project is bootstrapped with [Create Elm App](https://github.com/halfzebra/create-elm-app).",
+  "homepage": "https://reddit.arbaaz.io",
+  "description":
+    "This project is bootstrapped with [Create Elm App](https://github.com/halfzebra/create-elm-app).",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -18,7 +20,6 @@
   "bugs": {
     "url": "https://github.com/arbaaz/reddit-client-elm/issues"
   },
-  "homepage": "https://github.com/arbaaz/reddit-client-elm#readme",
   "devDependencies": {
     "create-elm-app": "^1.10.4"
   }
