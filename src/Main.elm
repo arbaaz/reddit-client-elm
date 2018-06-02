@@ -1,55 +1,42 @@
 module Main exposing (..)
 
-import Debug exposing (..)
+-- import Debug exposing (..)
+
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Http
 import Json.Decode as JD exposing (Decoder, at, field, int, list, map3, string)
-
-
--- json : String
--- json =
---     """
--- {
---   "kind": "Listing",
---   "data": {
---     "children": [
---       {"data":{"url":"http://www.example.com"}},
---       {"data":{"url": "http://www.example.com"}}
---     ]
---   }
--- }
--- """
-
-
-type alias Post =
-    { url : String
-    , title : String
-    , ups : Int
-    , source : Maybe String
-    }
-
-
-type alias Preview =
-    { url : String
-    }
+import Models.Post exposing (Post)
+import View.Post exposing (renderPost)
 
 
 type alias PostList =
     List Post
 
 
-type alias X =
+type alias DataStore =
     { after : String
+    , before : String
     , children : PostList
+    }
+
+
+type alias Model =
+    { data : PostList
+    , query : String
+    , error : String
+    , after : String
+    , before : String
+    , loading : Bool
     }
 
 
 postDecoder : Decoder Post
 postDecoder =
-    JD.map4 Post
+    JD.map5 Post
         (field "url" string)
+        (field "permalink" string)
         (field "title" string)
         (field "ups" int)
         (JD.maybe (at [ "preview", "images" ] <| JD.index 0 <| at [ "source", "url" ] string))
@@ -61,9 +48,13 @@ postsDecoder =
         |> JD.list
 
 
-dataDecoder : Decoder X
+dataDecoder : Decoder DataStore
 dataDecoder =
-    at [ "data" ] <| JD.map2 X (field "after" string) (field "children" postsDecoder)
+    at [ "data" ] <|
+        JD.map3 DataStore
+            (field "after" string)
+            (field "before" string)
+            (field "children" postsDecoder)
 
 
 fetchPosts : Model -> Cmd Msg
@@ -81,44 +72,64 @@ fetchPosts model =
     cmd
 
 
+nextPosts : Model -> Cmd Msg
+nextPosts model =
+    let
+        url =
+            "//www.reddit.com/r/" ++ model.query ++ "/hot.json?limit=100&count=100&after=" ++ model.after
+
+        request =
+            Http.get url dataDecoder
+
+        cmd =
+            Http.send Posts request
+    in
+    cmd
+
+
+prevPosts : Model -> Cmd Msg
+prevPosts model =
+    let
+        url =
+            "//www.reddit.com/r/" ++ model.query ++ "/hot.json?limit=100&count=100&before=" ++ model.before
+
+        request =
+            Http.get url dataDecoder
+
+        cmd =
+            Http.send Posts request
+    in
+    cmd
+
+
 type Msg
-    = Posts (Result Http.Error X)
+    = Posts (Result Http.Error DataStore)
     | FetchPosts
     | RecordQuery String
+    | NextPosts
+    | PrevPosts
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Posts (Ok x) ->
-            ( { model | data = List.reverse (List.sortBy .ups x.children), after = x.after }, Cmd.none )
+            ( { model | data = List.reverse (List.sortBy .ups x.children), after = x.after, loading = False }, Cmd.none )
 
         Posts (Err err) ->
-            ( { model | error = toString err }, Cmd.none )
+            ( { model | loading = False, error = toString err }, Cmd.none )
 
         FetchPosts ->
-            ( model, fetchPosts model )
+            ( { model | loading = True }, fetchPosts model )
+
+        NextPosts ->
+            ( { model | loading = True }, nextPosts model )
+
+        PrevPosts ->
+            ( { model | loading = True }, prevPosts model )
 
         RecordQuery query ->
             ( { model | query = query }, Cmd.none )
-
-
-hasPreview : Post -> String
-hasPreview post =
-    Maybe.withDefault "http://place-hold.it/300x500" post.source
-
-
-renderPost : Post -> Html Msg
-renderPost post =
-    div [ class "card" ]
-        [ a [ href post.url ]
-            [ img [ class "card-img-top", src (hasPreview post) ] []
-            , div []
-                [ span []
-                    [ text post.title ]
-                ]
-            ]
-        ]
 
 
 renderPosts : Model -> Html Msg
@@ -130,19 +141,34 @@ view : Model -> Html Msg
 view model =
     let
         inner =
-            div []
-                [ input [ onInput RecordQuery ] []
-                , button
-                    [ onClick FetchPosts
-                    , class "btn btn-primary"
+            div [ class "form" ]
+                [ div [ class "input-group" ]
+                    [ div [ class "input-group-prepend" ]
+                        [ button
+                            [ onClick PrevPosts, class "btn btn-secondary" ]
+                            [ text "Prev" ]
+                        ]
+                    , input [ placeholder model.query, onInput RecordQuery ] []
+                    , div [ class "input-group-append" ]
+                        [ button
+                            [ onClick FetchPosts
+                            , class "btn btn-success"
+                            ]
+                            [ text "Fetch" ]
+                        , button
+                            [ onClick NextPosts, class "btn btn-primary" ]
+                            [ text "Next" ]
+                        ]
                     ]
-                    [ text "Fetch Reddit Links" ]
                 , br [] []
                 , renderPosts model
                 ]
     in
     div [ id "outer" ]
-        [ inner
+        [ if model.loading then
+            div [ class "loader" ] []
+          else
+            inner
         , div [] [ text model.error ]
         ]
 
@@ -152,20 +178,14 @@ subscriptions model =
     Sub.none
 
 
-type alias Model =
-    { data : PostList
-    , query : String
-    , error : String
-    , after : String
-    }
-
-
 initModel : Model
 initModel =
     { data = []
     , query = "tinder"
     , error = ""
     , after = ""
+    , before = ""
+    , loading = False
     }
 
 
