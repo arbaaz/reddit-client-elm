@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "summary": "Reddit client written in Elm",
-  "repository": "https://github.com/arbaaz/reddit-client-elm",
+  "repository": "https://github.com/arbaaz/reddit-client-elm.git",
   "homepage": "https://reddit.arbaaz.io",
   "license": "BSD3",
   "source-directories": ["src"],

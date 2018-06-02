@@ -148,7 +148,7 @@ view model =
                             [ onClick PrevPosts, class "btn btn-secondary" ]
                             [ text "Prev" ]
                         ]
-                    , input [ placeholder model.query, onInput RecordQuery ] []
+                    , input [ onInput RecordQuery ] []
                     , div [ class "input-group-append" ]
                         [ button
                             [ onClick FetchPosts
