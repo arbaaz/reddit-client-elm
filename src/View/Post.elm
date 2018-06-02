@@ -22,11 +22,7 @@ renderPost post =
                 img [ class "card-img-top", src (hasPreview post) ] []
     in
     div [ class "card" ]
-        [ a [ href post.imageUrl ]
-            [ media
-            , div []
-                [ a [ href ("//www.reddit.com" ++ post.postUrl) ]
-                    [ text post.title ]
-                ]
-            ]
+        [ media
+        , a [ href ("//www.reddit.com" ++ post.postUrl) ]
+            [ text post.title ]
         ]

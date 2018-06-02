@@ -91,7 +91,7 @@ prevPosts : Model -> Cmd Msg
 prevPosts model =
     let
         url =
-            "//www.reddit.com/r/" ++ model.query ++ "/hot.json?limit=100&count=100&before=" ++ model.before
+            "//www.reddit.com/r/" ++ String.trim model.query ++ "/hot.json?limit=100&count=100&before=" ++ model.before
 
         request =
             Http.get url dataDecoder
@@ -114,7 +114,14 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Posts (Ok x) ->
-            ( { model | data = List.reverse (List.sortBy .ups x.children), after = x.after, loading = False }, Cmd.none )
+            ( { model
+                | data = List.reverse (List.sortBy .ups x.children)
+                , after = x.after
+                , loading = False
+                , error = ""
+              }
+            , Cmd.none
+            )
 
         Posts (Err err) ->
             ( { model | loading = False, error = toString err }, Cmd.none )
@@ -129,7 +136,7 @@ update msg model =
             ( { model | loading = True }, prevPosts model )
 
         RecordQuery query ->
-            ( { model | query = query }, Cmd.none )
+            ( { model | query = query, after = "", before = "" }, Cmd.none )
 
 
 renderPosts : Model -> Html Msg
