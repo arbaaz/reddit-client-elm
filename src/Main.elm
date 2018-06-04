@@ -61,7 +61,7 @@ fetchPosts : Model -> Cmd Msg
 fetchPosts model =
     let
         url =
-            "//www.reddit.com/r/" ++ model.query ++ "/hot.json?limit=100&count=100"
+            "//www.reddit.com/r/" ++ model.query ++ "/new.json?limit=100&count=100"
 
         request =
             Http.get url dataDecoder
@@ -76,7 +76,7 @@ nextPosts : Model -> Cmd Msg
 nextPosts model =
     let
         url =
-            "//www.reddit.com/r/" ++ model.query ++ "/hot.json?limit=100&count=100&after=" ++ model.after
+            "//www.reddit.com/r/" ++ model.query ++ "/new.json?limit=100&count=100&after=" ++ model.after
 
         request =
             Http.get url dataDecoder
@@ -91,7 +91,7 @@ prevPosts : Model -> Cmd Msg
 prevPosts model =
     let
         url =
-            "//www.reddit.com/r/" ++ String.trim model.query ++ "/hot.json?limit=100&count=100&before=" ++ model.before
+            "//www.reddit.com/r/" ++ String.trim model.query ++ "/new.json?limit=100&count=100&before=" ++ model.before
 
         request =
             Http.get url dataDecoder
