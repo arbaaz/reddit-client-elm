@@ -1,6 +1,7 @@
 module View.Post exposing (..)
 
-import Debug exposing (..)
+-- import Debug exposing (..)
+
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Models.Post exposing (Post)

@@ -151,7 +151,7 @@ update msg model =
 
 renderPosts : Model -> Html Msg
 renderPosts posts =
-    div [] (List.map renderPost posts.data)
+    div [ class "postList" ] (List.map renderPost posts.data)
 
 
 view : Model -> Html Msg
