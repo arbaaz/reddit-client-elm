@@ -16,19 +16,9 @@ type alias PostList =
 
 
 type alias DataStore =
-    { after : String
-    , before : String
+    { after : Maybe String
+    , before : Maybe String
     , children : PostList
-    }
-
-
-type alias Model =
-    { data : PostList
-    , query : String
-    , error : String
-    , after : String
-    , before : String
-    , loading : Bool
     }
 
 
@@ -52,8 +42,8 @@ dataDecoder : Decoder DataStore
 dataDecoder =
     at [ "data" ] <|
         JD.map3 DataStore
-            (field "after" string)
-            (field "before" string)
+            (JD.maybe (field "after" string))
+            (JD.maybe (field "before" string))
             (field "children" postsDecoder)
 
 
@@ -61,7 +51,12 @@ fetchPosts : Model -> Cmd Msg
 fetchPosts model =
     let
         url =
-            "//www.reddit.com/r/" ++ model.query ++ "/new.json?limit=100&count=100"
+            "//www.reddit.com/r/"
+                ++ String.trim model.query
+                ++ "/new.json?limit="
+                ++ model.limit
+                ++ "&count="
+                ++ model.count
 
         request =
             Http.get url dataDecoder
@@ -76,7 +71,14 @@ nextPosts : Model -> Cmd Msg
 nextPosts model =
     let
         url =
-            "//www.reddit.com/r/" ++ model.query ++ "/new.json?limit=100&count=100&after=" ++ model.after
+            "//www.reddit.com/r/"
+                ++ String.trim model.query
+                ++ "/new.json?limit="
+                ++ model.limit
+                ++ "&count="
+                ++ model.count
+                ++ "&after="
+                ++ model.after
 
         request =
             Http.get url dataDecoder
@@ -91,7 +93,14 @@ prevPosts : Model -> Cmd Msg
 prevPosts model =
     let
         url =
-            "//www.reddit.com/r/" ++ String.trim model.query ++ "/new.json?limit=100&count=100&before=" ++ model.before
+            "//www.reddit.com/r/"
+                ++ String.trim model.query
+                ++ "/new.json?limit="
+                ++ model.limit
+                ++ "&count="
+                ++ model.count
+                ++ "before="
+                ++ model.before
 
         request =
             Http.get url dataDecoder
@@ -116,7 +125,8 @@ update msg model =
         Posts (Ok x) ->
             ( { model
                 | data = List.reverse (List.sortBy .ups x.children)
-                , after = x.after
+                , after = Maybe.withDefault "" x.after
+                , before = Maybe.withDefault "" x.before
                 , loading = False
                 , error = ""
               }
@@ -185,6 +195,18 @@ subscriptions model =
     Sub.none
 
 
+type alias Model =
+    { data : PostList
+    , query : String
+    , error : String
+    , after : String
+    , before : String
+    , loading : Bool
+    , limit : String
+    , count : String
+    }
+
+
 initModel : Model
 initModel =
     { data = []
@@ -193,6 +215,8 @@ initModel =
     , after = ""
     , before = ""
     , loading = False
+    , limit = "5"
+    , count = "0"
     }
 
 
