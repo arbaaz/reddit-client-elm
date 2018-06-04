@@ -1,14 +1,23 @@
 module View.Post exposing (..)
 
+import Debug exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Models.Post exposing (Post)
 import View.Iframe exposing (renderIframe)
 
 
-hasPreview : Post -> String
+getPreview : Post -> String
+getPreview post =
+    Maybe.withDefault "" post.source
+
+
+hasPreview : Post -> Bool
 hasPreview post =
-    Maybe.withDefault "//place-hold.it/300x500" post.source
+    if getPreview post == "" then
+        False
+    else
+        True
 
 
 renderPost : Post -> Html msg
@@ -19,10 +28,14 @@ renderPost post =
                 div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ]
                     [ renderIframe post.imageUrl ]
             else
-                img [ class "card-img-top", src (hasPreview post) ] []
+                img [ class "card-img-top", src (getPreview post) ] []
     in
-    div [ class "card" ]
-        [ media
-        , a [ href ("//www.reddit.com" ++ post.postUrl) ]
-            [ text post.title ]
-        ]
+    if hasPreview post then
+        div
+            [ class "card" ]
+            [ media
+            , a [ href ("//www.reddit.com" ++ post.postUrl) ]
+                [ text post.title ]
+            ]
+    else
+        div [] []
