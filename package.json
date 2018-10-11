@@ -2,8 +2,7 @@
   "name": "reddit-client-elm",
   "version": "1.0.0",
   "homepage": "https://reddit.arbaaz.io",
-  "description":
-    "This project is bootstrapped with [Create Elm App](https://github.com/halfzebra/create-elm-app).",
+  "description": "This project is bootstrapped with [Create Elm App](https://github.com/halfzebra/create-elm-app).",
   "main": "index.js",
   "directories": {
     "test": "tests",

@@ -29,7 +29,7 @@ postDecoder =
         (field "permalink" string)
         (field "title" string)
         (field "ups" int)
-        (JD.maybe (at [ "preview", "images" ] <| JD.index 0 <| at [ "source", "url" ] string))
+        (JD.maybe (field "url" string))
 
 
 postsDecoder : Decoder PostList
