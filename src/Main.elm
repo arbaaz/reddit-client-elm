@@ -215,7 +215,7 @@ initModel =
     , after = ""
     , before = ""
     , loading = False
-    , limit = "100"
+    , limit = "25"
     , count = "0"
     }
 
