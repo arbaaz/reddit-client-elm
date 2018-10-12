@@ -1,4 +1,4 @@
-module Main exposing (..)
+port module Main exposing (..)
 
 -- import Debug exposing (..)
 
@@ -51,7 +51,7 @@ fetchPosts : Model -> Cmd Msg
 fetchPosts model =
     let
         url =
-            "//www.reddit.com/r/"
+            "https://www.reddit.com/r/"
                 ++ String.trim model.query
                 ++ "/new.json?limit="
                 ++ model.limit
@@ -71,7 +71,7 @@ nextPosts : Model -> Cmd Msg
 nextPosts model =
     let
         url =
-            "//www.reddit.com/r/"
+            "https://www.reddit.com/r/"
                 ++ String.trim model.query
                 ++ "/new.json?limit="
                 ++ model.limit
@@ -93,7 +93,7 @@ prevPosts : Model -> Cmd Msg
 prevPosts model =
     let
         url =
-            "//www.reddit.com/r/"
+            "https://www.reddit.com/r/"
                 ++ String.trim model.query
                 ++ "/new.json?limit="
                 ++ model.limit
@@ -119,6 +119,9 @@ type Msg
     | PrevPosts
 
 
+port toJs : String -> Cmd msg
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -137,7 +140,7 @@ update msg model =
             ( { model | loading = False, error = toString err }, Cmd.none )
 
         FetchPosts ->
-            ( { model | loading = True }, fetchPosts model )
+            ( { model | loading = True }, Cmd.batch [ fetchPosts model, toJs model.query ] )
 
         NextPosts ->
             ( { model | loading = True }, nextPosts model )
