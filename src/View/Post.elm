@@ -9,9 +9,8 @@ import View.Iframe exposing (renderIframe)
 
 
 urlDecode : String -> String
-urlDecode x =
-    String.split "&amp;" x
-        |> String.join "&"
+urlDecode =
+    String.split "&amp;" >> String.join "&"
 
 
 getPreview : Post -> String
