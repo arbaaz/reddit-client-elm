@@ -11,8 +11,4 @@ app.ports.toJs.subscribe(function(str) {
   });
 });
 
-app.ports.title.subscribe(function(title) {
-  document.title = title;
-});
-
 registerServiceWorker();

@@ -12,8 +12,13 @@ type alias Post =
 
 
 type Route
-    = PostRoute PostId
+    = PostRoute SubReddit PostId
+    | SubRedditRoute SubReddit
     | NotFoundRoute
+
+
+type alias SubReddit =
+    String
 
 
 type alias PostId =
@@ -28,4 +33,17 @@ type alias DataStore =
     { after : Maybe String
     , before : Maybe String
     , children : PostList
+    }
+
+
+type alias Model =
+    { data : PostList
+    , query : String
+    , error : String
+    , after : String
+    , before : String
+    , loading : Bool
+    , limit : String
+    , count : String
+    , route : Route
     }

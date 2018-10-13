@@ -4,7 +4,7 @@ module View.Post exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Models exposing (Post, PostId)
+import Models exposing (Post, PostId, SubReddit)
 import View.Iframe exposing (renderIframe)
 
 
@@ -21,13 +21,13 @@ hasPreview post =
         True
 
 
-postPath : PostId -> String
-postPath id =
-    "#post/" ++ id
+postPath : ( SubReddit, PostId ) -> String
+postPath ( sub, id ) =
+    "#r/" ++ sub ++ "/" ++ id
 
 
-renderPost : Post -> Html msg
-renderPost post =
+renderPost : ( SubReddit, Post ) -> Html msg
+renderPost ( sub, post ) =
     let
         media =
             if String.contains "gfycat" post.imageUrl then
@@ -40,7 +40,7 @@ renderPost post =
         div
             [ class "card" ]
             [ media
-            , a [ href (postPath post.id) ]
+            , a [ href (postPath ( sub, post.id )) ]
                 [ text post.title ]
             ]
     else

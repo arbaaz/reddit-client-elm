@@ -1,19 +1,14 @@
 port module Main exposing (..)
 
--- import Debug exposing (..)
-
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Http
 import Json.Decode as JD exposing (Decoder, at, field, int, list, map3, string)
-import Models exposing (DataStore, Post, PostList, Route(..))
-import Navigation exposing (Location)
+import Models exposing (DataStore, Model, Post, PostList, Route(..), SubReddit)
+import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation)
 import View.Post exposing (renderPost)
-
-
-port title : String -> Cmd a
 
 
 postDecoder : Decoder Post
@@ -125,8 +120,14 @@ update msg model =
             let
                 newRoute =
                     parseLocation location
+
+                query =
+                    routeParser newRoute
+
+                newModel =
+                    { model | route = newRoute, query = query }
             in
-            ( { model | route = newRoute }, Cmd.none )
+            ( newModel, fetchPosts newModel )
 
         Posts (Ok x) ->
             ( { model
@@ -143,7 +144,7 @@ update msg model =
             ( { model | loading = False, error = toString err }, Cmd.none )
 
         FetchPosts ->
-            ( { model | loading = True }, Cmd.batch [ fetchPosts model, toJs model.query ] )
+            ( { model | loading = True }, Cmd.batch [ modifyUrl ("#r/" ++ model.query), toJs model.query ] )
 
         NextPosts ->
             ( { model | loading = True }, nextPosts model )
@@ -155,9 +156,9 @@ update msg model =
             ( { model | query = query, after = "", before = "" }, Cmd.none )
 
 
-renderPosts : Model -> Html Msg
-renderPosts posts =
-    div [ class "postList" ] (List.map renderPost posts.data)
+renderPosts : ( SubReddit, PostList ) -> Html Msg
+renderPosts ( sub, posts ) =
+    div [ class "postList" ] (List.map (\post -> renderPost ( sub, post )) posts)
 
 
 view : Model -> Html Msg
@@ -169,14 +170,17 @@ view model =
 router : Model -> Html Msg
 router model =
     case model.route of
-        PostRoute id ->
+        SubRedditRoute sub ->
+            page model
+
+        PostRoute sub id ->
             let
                 postItem =
                     List.head (List.filter (\m -> m.id == id) model.data)
             in
             case postItem of
                 Just post ->
-                    renderPost post
+                    renderPost ( sub, post )
 
                 Nothing ->
                     notFoundView
@@ -195,6 +199,12 @@ notFoundView =
 page : Model -> Html Msg
 page model =
     let
+        posts =
+            model.data
+
+        query =
+            model.query
+
         inner =
             div [ class "form" ]
                 [ div [ class "input-group" ]
@@ -216,7 +226,7 @@ page model =
                         ]
                     ]
                 , br [] []
-                , renderPosts model
+                , renderPosts ( query, posts )
                 ]
     in
     div [ id "outer" ]
@@ -233,23 +243,31 @@ subscriptions model =
     Sub.none
 
 
-type alias Model =
-    { data : PostList
-    , query : String
-    , error : String
-    , after : String
-    , before : String
-    , loading : Bool
-    , limit : String
-    , count : String
-    , route : Route
-    }
+routeParser : Route -> String
+routeParser route =
+    let
+        query =
+            case route of
+                PostRoute sub id ->
+                    sub ++ "/" ++ id
+
+                SubRedditRoute sub ->
+                    sub
+
+                NotFoundRoute ->
+                    "tinder"
+    in
+    query
 
 
 initModel : Route -> Model
 initModel route =
+    let
+        query =
+            routeParser route
+    in
     { data = []
-    , query = "tinder"
+    , query = query
     , error = ""
     , after = ""
     , before = ""

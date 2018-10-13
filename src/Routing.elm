@@ -8,7 +8,8 @@ import UrlParser exposing (..)
 matchers : Parser (Route -> a) a
 matchers =
     oneOf
-        [ map PostRoute (s "post" </> string)
+        [ map SubRedditRoute (s "r" </> string)
+        , map PostRoute (s "r" </> string </> string)
         ]
 
 
