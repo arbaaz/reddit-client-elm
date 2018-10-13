@@ -35,7 +35,7 @@ renderPost : ( SubReddit, Post ) -> Html msg
 renderPost ( sub, post ) =
     let
         media =
-            if post.postHint == "rich:video" then
+            if post.postHint == Just "rich:video" then
                 div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ]
                     [ renderIframe (Maybe.withDefault "" post.mediaUrl) ]
             else

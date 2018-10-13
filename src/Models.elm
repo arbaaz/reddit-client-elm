@@ -1,16 +1,39 @@
 module Models exposing (..)
 
 
+type PostHint
+    = RichVideo
+    | Image
+    | Link
+    | Unknown
+
+
 type alias Post =
     { id : String
     , imageUrl : String
     , postUrl : String
     , title : String
     , ups : Int
-    , postHint : String
+    , postHint : Maybe String
     , source : Maybe String
     , mediaUrl : Maybe String
     }
+
+
+postHint : String -> PostHint
+postHint hint =
+    case hint of
+        "rich:video" ->
+            RichVideo
+
+        "image" ->
+            Image
+
+        "link" ->
+            Link
+
+        _ ->
+            Unknown
 
 
 type Route

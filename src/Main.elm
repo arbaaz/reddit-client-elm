@@ -1,42 +1,14 @@
 port module Main exposing (..)
 
+import Decode exposing (dataDecoder, postDecoder, postsDecoder)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Http
-import Json.Decode as JD exposing (Decoder, at, field, int, list, map3, string)
 import Models exposing (DataStore, Model, Post, PostList, Route(..), SubReddit)
 import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation)
 import View.Post exposing (renderPost)
-
-
-postDecoder : Decoder Post
-postDecoder =
-    JD.map8 Post
-        (field "id" string)
-        (field "url" string)
-        (field "permalink" string)
-        (field "title" string)
-        (field "ups" int)
-        (field "post_hint" string)
-        (JD.maybe (at [ "preview", "images" ] <| JD.index 0 <| at [ "source", "url" ] string))
-        (JD.maybe (at [ "media", "oembed", "thumbnail_url" ] string))
-
-
-postsDecoder : Decoder PostList
-postsDecoder =
-    at [ "data" ] postDecoder
-        |> JD.list
-
-
-dataDecoder : Decoder DataStore
-dataDecoder =
-    at [ "data" ] <|
-        JD.map3 DataStore
-            (JD.maybe (field "after" string))
-            (JD.maybe (field "before" string))
-            (field "children" postsDecoder)
 
 
 fetchPosts : Model -> Cmd Msg
