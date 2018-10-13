@@ -31,11 +31,21 @@ postPath ( sub, id ) =
     "#r/" ++ sub ++ "/" ++ id
 
 
+isRichVideo : Models.PostHint -> Bool
+isRichVideo postHint =
+    case postHint of
+        Models.RichVideo ->
+            True
+
+        _ ->
+            False
+
+
 renderPost : ( SubReddit, Post ) -> Html msg
 renderPost ( sub, post ) =
     let
         media =
-            if post.postHint == Just "rich:video" then
+            if isRichVideo post.postHint then
                 div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ]
                     [ renderIframe (Maybe.withDefault "" post.mediaUrl) ]
             else
