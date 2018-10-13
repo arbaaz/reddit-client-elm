@@ -8,7 +8,7 @@ import Http
 import Models exposing (DataStore, Model, Post, PostList, Route(..), SubReddit)
 import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation)
-import View.Post exposing (renderPost)
+import View.Post exposing (renderPost, renderPosts)
 
 
 fetchPosts : Model -> Cmd Msg
@@ -128,11 +128,6 @@ update msg model =
 
         RecordQuery query ->
             ( { model | query = query, after = "", before = "" }, Cmd.none )
-
-
-renderPosts : ( SubReddit, PostList ) -> Html Msg
-renderPosts ( sub, posts ) =
-    div [ class "postList" ] (List.map (\post -> renderPost ( sub, post )) posts)
 
 
 view : Model -> Html Msg

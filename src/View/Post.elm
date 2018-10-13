@@ -4,7 +4,7 @@ module View.Post exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Models exposing (Post, PostId, SubReddit)
+import Models exposing (Post, PostId, PostList, SubReddit)
 import View.Iframe exposing (renderIframe)
 
 
@@ -50,3 +50,8 @@ renderPost ( sub, post ) =
             ]
     else
         div [] []
+
+
+renderPosts : ( SubReddit, PostList ) -> Html msg
+renderPosts ( sub, posts ) =
+    div [ class "postList" ] (List.map (\post -> renderPost ( sub, post )) posts)
