@@ -225,7 +225,7 @@ initModel =
 
 init : ( Model, Cmd Msg )
 init =
-    ( initModel, fetchPosts initModel )
+    ( initModel, Cmd.batch [ fetchPosts initModel, toJs initModel.query ] )
 
 
 main : Program Never Model Msg
