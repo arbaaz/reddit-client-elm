@@ -218,7 +218,7 @@ routeParser route =
         query =
             case route of
                 PostRoute sub id ->
-                    sub ++ "/" ++ id
+                    sub
 
                 SubRedditRoute sub ->
                     sub

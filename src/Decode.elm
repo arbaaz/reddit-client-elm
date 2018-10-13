@@ -1,6 +1,6 @@
 module Decode exposing (..)
 
-import Json.Decode as JD exposing (Decoder, at, field, int, list, string)
+import Json.Decode as JD exposing (Decoder, andThen, at, field, int, list, string)
 import Models exposing (DataStore, Model, Post, PostHint(..), PostList, Route(..), SubReddit)
 
 
@@ -38,7 +38,7 @@ postDecoder =
         (field "permalink" string)
         (field "title" string)
         (field "ups" int)
-        (JD.maybe (field "post_hint" string) |> JD.andThen justPosthint)
+        (JD.maybe (field "post_hint" string) |> andThen justPosthint)
         (JD.maybe (at [ "preview", "images" ] <| JD.index 0 <| at [ "source", "url" ] string))
         (JD.maybe (at [ "media", "oembed", "thumbnail_url" ] string))
 
