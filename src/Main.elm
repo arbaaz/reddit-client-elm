@@ -7,21 +7,13 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Http
 import Json.Decode as JD exposing (Decoder, at, field, int, list, map3, string)
-import Models exposing (Post, Route)
+import Models exposing (DataStore, Post, PostList, Route(..))
 import Navigation exposing (Location)
 import Routing exposing (parseLocation)
 import View.Post exposing (renderPost)
 
 
-type alias PostList =
-    List Post
-
-
-type alias DataStore =
-    { after : Maybe String
-    , before : Maybe String
-    , children : PostList
-    }
+port title : String -> Cmd a
 
 
 postDecoder : Decoder Post
@@ -170,6 +162,38 @@ renderPosts posts =
 
 view : Model -> Html Msg
 view model =
+    div []
+        [ router model ]
+
+
+router : Model -> Html Msg
+router model =
+    case model.route of
+        PostRoute id ->
+            let
+                postItem =
+                    List.head (List.filter (\m -> m.id == id) model.data)
+            in
+            case postItem of
+                Just post ->
+                    renderPost post
+
+                Nothing ->
+                    notFoundView
+
+        NotFoundRoute ->
+            page model
+
+
+notFoundView : Html msg
+notFoundView =
+    div []
+        [ text "Not found"
+        ]
+
+
+page : Model -> Html Msg
+page model =
     let
         inner =
             div [ class "form" ]
@@ -222,6 +246,7 @@ type alias Model =
     }
 
 
+initModel : Route -> Model
 initModel route =
     { data = []
     , query = "tinder"
@@ -233,10 +258,6 @@ initModel route =
     , count = "0"
     , route = route
     }
-
-
-
--- init : ( Model, Cmd Msg )
 
 
 init : Location -> ( Model, Cmd Msg )
