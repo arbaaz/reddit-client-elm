@@ -8,9 +8,15 @@ import Models exposing (Post, PostId, SubReddit)
 import View.Iframe exposing (renderIframe)
 
 
+urlDecode : String -> String
+urlDecode x =
+    String.split "&amp;" x
+        |> String.join "&"
+
+
 getPreview : Post -> String
 getPreview post =
-    Maybe.withDefault "" post.source
+    Maybe.withDefault "" post.source |> urlDecode
 
 
 hasPreview : Post -> Bool
@@ -30,9 +36,9 @@ renderPost : ( SubReddit, Post ) -> Html msg
 renderPost ( sub, post ) =
     let
         media =
-            if String.contains "gfycat" post.imageUrl then
+            if post.mediaType == Just "gfycat.com" then
                 div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ]
-                    [ renderIframe post.imageUrl ]
+                    [ renderIframe (Maybe.withDefault "" post.mediaUrl) ]
             else
                 img [ class "card-img-top", src (getPreview post) ] []
     in

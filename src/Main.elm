@@ -13,13 +13,15 @@ import View.Post exposing (renderPost)
 
 postDecoder : Decoder Post
 postDecoder =
-    JD.map6 Post
+    JD.map8 Post
         (field "id" string)
         (field "url" string)
         (field "permalink" string)
         (field "title" string)
         (field "ups" int)
-        (JD.maybe (field "url" string))
+        (JD.maybe (at [ "preview", "images" ] <| JD.index 0 <| at [ "source", "url" ] string))
+        (JD.maybe (at [ "media", "type" ] string))
+        (JD.maybe (at [ "media", "oembed", "thumbnail_url" ] string))
 
 
 postsDecoder : Decoder PostList
