@@ -4,7 +4,7 @@ module View.Post exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Models exposing (Post, PostId, PostList, SubReddit)
+import Models exposing (Post, PostHint(..), PostId, PostList, SubReddit)
 import View.Iframe exposing (renderIframe)
 
 
@@ -31,10 +31,10 @@ postPath ( sub, id ) =
     "#r/" ++ sub ++ "/" ++ id
 
 
-isRichVideo : Models.PostHint -> Bool
+isRichVideo : Post -> Bool
 isRichVideo postHint =
-    case postHint of
-        Models.RichVideo ->
+    case postHint.postHint of
+        RichVideo ->
             True
 
         _ ->
@@ -45,7 +45,7 @@ renderPost : ( SubReddit, Post ) -> Html msg
 renderPost ( sub, post ) =
     let
         media =
-            if isRichVideo post.postHint then
+            if isRichVideo post then
                 div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ]
                     [ renderIframe (Maybe.withDefault "" post.mediaUrl) ]
             else

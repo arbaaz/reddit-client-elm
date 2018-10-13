@@ -1,23 +1,23 @@
 module Decode exposing (..)
 
 import Json.Decode as JD exposing (Decoder, at, field, int, list, string)
-import Models exposing (DataStore, Model, Post, PostHint, PostList, Route(..), SubReddit)
+import Models exposing (DataStore, Model, Post, PostHint(..), PostList, Route(..), SubReddit)
 
 
 postHint : String -> Decoder PostHint
 postHint hint =
     case hint of
         "rich:video" ->
-            JD.succeed Models.RichVideo
+            JD.succeed RichVideo
 
         "image" ->
-            JD.succeed Models.Image
+            JD.succeed Image
 
         "link" ->
-            JD.succeed Models.Link
+            JD.succeed Link
 
         _ ->
-            JD.succeed Models.Unknown
+            JD.succeed Unknown
 
 
 justPosthint : Maybe String -> Decoder PostHint
@@ -27,12 +27,7 @@ justPosthint hint =
             postHint hint
 
         Nothing ->
-            JD.succeed Models.Unknown
-
-
-postHintDecoder : Decoder PostHint
-postHintDecoder =
-    JD.maybe (field "post_hint" string) |> JD.andThen justPosthint
+            JD.succeed Unknown
 
 
 postDecoder : Decoder Post
@@ -43,7 +38,7 @@ postDecoder =
         (field "permalink" string)
         (field "title" string)
         (field "ups" int)
-        postHintDecoder
+        (JD.maybe (field "post_hint" string) |> JD.andThen justPosthint)
         (JD.maybe (at [ "preview", "images" ] <| JD.index 0 <| at [ "source", "url" ] string))
         (JD.maybe (at [ "media", "oembed", "thumbnail_url" ] string))
 
