@@ -4,7 +4,7 @@ module View.Post exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Models.Post exposing (Post)
+import Models exposing (Post, PostId)
 import View.Iframe exposing (renderIframe)
 
 
@@ -21,6 +21,11 @@ hasPreview post =
         True
 
 
+postPath : PostId -> String
+postPath id =
+    "#post/" ++ id
+
+
 renderPost : Post -> Html msg
 renderPost post =
     let
@@ -35,7 +40,7 @@ renderPost post =
         div
             [ class "card" ]
             [ media
-            , a [ href ("//www.reddit.com" ++ post.postUrl) ]
+            , a [ href (postPath post.id) ]
                 [ text post.title ]
             ]
     else

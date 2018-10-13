@@ -7,7 +7,9 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Http
 import Json.Decode as JD exposing (Decoder, at, field, int, list, map3, string)
-import Models.Post exposing (Post)
+import Models exposing (Post, Route)
+import Navigation exposing (Location)
+import Routing exposing (parseLocation)
 import View.Post exposing (renderPost)
 
 
@@ -24,7 +26,8 @@ type alias DataStore =
 
 postDecoder : Decoder Post
 postDecoder =
-    JD.map5 Post
+    JD.map6 Post
+        (field "id" string)
         (field "url" string)
         (field "permalink" string)
         (field "title" string)
@@ -117,6 +120,7 @@ type Msg
     | RecordQuery String
     | NextPosts
     | PrevPosts
+    | OnLocationChange Location
 
 
 port toJs : String -> Cmd msg
@@ -125,6 +129,13 @@ port toJs : String -> Cmd msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        OnLocationChange location ->
+            let
+                newRoute =
+                    parseLocation location
+            in
+            ( { model | route = newRoute }, Cmd.none )
+
         Posts (Ok x) ->
             ( { model
                 | data = List.reverse (List.sortBy .ups x.children)
@@ -207,11 +218,11 @@ type alias Model =
     , loading : Bool
     , limit : String
     , count : String
+    , route : Route
     }
 
 
-initModel : Model
-initModel =
+initModel route =
     { data = []
     , query = "tinder"
     , error = ""
@@ -220,17 +231,29 @@ initModel =
     , loading = False
     , limit = "25"
     , count = "0"
+    , route = route
     }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( initModel, Cmd.batch [ fetchPosts initModel, toJs initModel.query ] )
+
+-- init : ( Model, Cmd Msg )
+
+
+init : Location -> ( Model, Cmd Msg )
+init location =
+    let
+        currentRoute =
+            Routing.parseLocation location
+
+        model =
+            initModel currentRoute
+    in
+    ( model, Cmd.batch [ fetchPosts model, toJs model.query ] )
 
 
 main : Program Never Model Msg
 main =
-    program
+    Navigation.program OnLocationChange
         { init = init
         , update = update
         , view = view
