@@ -13,14 +13,14 @@ urlDecode =
     String.split "&amp;" >> String.join "&"
 
 
-getPreview : Post -> String
-getPreview post =
-    Maybe.withDefault "" post.source |> urlDecode
+getPreview : Maybe String -> String
+getPreview =
+    Maybe.withDefault "" >> urlDecode
 
 
 hasPreview : Post -> Bool
 hasPreview post =
-    if getPreview post == "" then
+    if getPreview post.source == "" then
         False
     else
         True
@@ -39,7 +39,7 @@ renderPost ( sub, post ) =
                 div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ]
                     [ renderIframe (Maybe.withDefault "" post.mediaUrl) ]
             else
-                img [ class "card-img-top", src (getPreview post) ] []
+                img [ class "card-img-top", src (getPreview post.source) ] []
     in
     if hasPreview post then
         div
