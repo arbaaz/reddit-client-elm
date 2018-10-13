@@ -35,7 +35,7 @@ renderPost : ( SubReddit, Post ) -> Html msg
 renderPost ( sub, post ) =
     let
         media =
-            if post.mediaType == Just "gfycat.com" then
+            if post.postHint == "rich:video" then
                 div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ]
                     [ renderIframe (Maybe.withDefault "" post.mediaUrl) ]
             else

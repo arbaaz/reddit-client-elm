@@ -7,8 +7,8 @@ type alias Post =
     , postUrl : String
     , title : String
     , ups : Int
+    , postHint : String
     , source : Maybe String
-    , mediaType : Maybe String
     , mediaUrl : Maybe String
     }
 
