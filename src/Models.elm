@@ -55,4 +55,5 @@ type alias Model =
     , limit : String
     , count : String
     , route : Route
+    , history : List String
     }

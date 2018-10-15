@@ -41,6 +41,11 @@ isRichVideo postHint =
             False
 
 
+redditPath : String -> String
+redditPath pathName =
+    "http://reddit.com/" ++ pathName
+
+
 renderPost : ( SubReddit, Post ) -> Html msg
 renderPost ( sub, post ) =
     let
@@ -48,8 +53,12 @@ renderPost ( sub, post ) =
             if isRichVideo post then
                 div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ]
                     [ renderIframe (Maybe.withDefault "" post.mediaUrl) ]
-            else
+            else if post.source == Just "" then
                 img [ class "card-img-top", src (getPreview post.source) ] []
+            else
+                a [ href post.imageUrl ]
+                    [ img [ class "card-img-top", src (getPreview post.source) ] []
+                    ]
     in
     if hasPreview post then
         div
@@ -57,6 +66,7 @@ renderPost ( sub, post ) =
             [ media
             , a [ href (postPath ( sub, post.id )) ]
                 [ text post.title ]
+            , a [ href (redditPath post.postUrl) ] [ text "open in reddit" ]
             ]
     else
         div [] []

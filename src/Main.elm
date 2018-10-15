@@ -8,7 +8,11 @@ import Http
 import Models exposing (DataStore, Model, Post, PostList, Route(..), SubReddit)
 import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation)
+import Set exposing (fromList, toList)
 import View.Post exposing (renderPost, renderPosts)
+
+
+port setStorage : List String -> Cmd msg
 
 
 fetchPosts : Model -> Cmd Msg
@@ -118,7 +122,11 @@ update msg model =
             ( { model | loading = False, error = toString err }, Cmd.none )
 
         FetchPosts ->
-            ( { model | loading = True }, Cmd.batch [ modifyUrl ("#r/" ++ model.query), toJs model.query ] )
+            let
+                newModel =
+                    { model | loading = True, history = toList <| fromList <| model.query :: model.history }
+            in
+            ( newModel, Cmd.batch [ modifyUrl ("#r/" ++ model.query), toJs model.query, setStorage newModel.history ] )
 
         NextPosts ->
             ( { model | loading = True }, nextPosts model )
@@ -155,13 +163,57 @@ router model =
                     notFoundView
 
         NotFoundRoute ->
-            page model
+            homePage model
+
+
+renderLinks : String -> Html msg
+renderLinks path =
+    div []
+        [ a [ class "links", href ("#r/" ++ path) ] [ text path ]
+        , br [] []
+        ]
+
+
+homePage : Model -> Html Msg
+homePage model =
+    div []
+        [ h3 []
+            [ text "Interesting Subreddits" ]
+        , div []
+            (List.map
+                renderLinks
+                model.history
+            )
+        , actionBar
+        ]
 
 
 notFoundView : Html msg
 notFoundView =
     div []
         [ text "Not found"
+        ]
+
+
+actionBar : Html Msg
+actionBar =
+    div [ class "input-group" ]
+        [ div [ class "input-group-prepend" ]
+            [ button
+                [ onClick PrevPosts, class "btn btn-secondary" ]
+                [ text "Prev" ]
+            ]
+        , input [ onInput RecordQuery ] []
+        , div [ class "input-group-append" ]
+            [ button
+                [ onClick FetchPosts
+                , class "btn btn-success"
+                ]
+                [ text "Fetch" ]
+            , button
+                [ onClick NextPosts, class "btn btn-primary" ]
+                [ text "Next" ]
+            ]
         ]
 
 
@@ -176,24 +228,7 @@ page model =
 
         inner =
             div [ class "form" ]
-                [ div [ class "input-group" ]
-                    [ div [ class "input-group-prepend" ]
-                        [ button
-                            [ onClick PrevPosts, class "btn btn-secondary" ]
-                            [ text "Prev" ]
-                        ]
-                    , input [ onInput RecordQuery ] []
-                    , div [ class "input-group-append" ]
-                        [ button
-                            [ onClick FetchPosts
-                            , class "btn btn-success"
-                            ]
-                            [ text "Fetch" ]
-                        , button
-                            [ onClick NextPosts, class "btn btn-primary" ]
-                            [ text "Next" ]
-                        ]
-                    ]
+                [ actionBar
                 , br [] []
                 , renderPosts ( query, posts )
                 ]
@@ -244,11 +279,16 @@ initModel route =
     , limit = "25"
     , count = "0"
     , route = route
+    , history = []
     }
 
 
-init : Location -> ( Model, Cmd Msg )
-init location =
+type alias Flags =
+    String
+
+
+init : Flags -> Location -> ( Model, Cmd Msg )
+init flags location =
     let
         currentRoute =
             Routing.parseLocation location
@@ -256,12 +296,12 @@ init location =
         model =
             initModel currentRoute
     in
-    ( model, Cmd.batch [ fetchPosts model, toJs model.query ] )
+    ( { model | history = String.split "_" flags }, Cmd.batch [ fetchPosts model, toJs model.query ] )
 
 
-main : Program Never Model Msg
+main : Program Flags Model Msg
 main =
-    Navigation.program OnLocationChange
+    Navigation.programWithFlags OnLocationChange
         { init = init
         , update = update
         , view = view
