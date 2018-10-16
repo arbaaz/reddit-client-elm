@@ -1,5 +1,21 @@
 module Models exposing (..)
 
+import Http
+import Navigation exposing (Location)
+
+
+type Msg
+    = Posts (Result Http.Error DataStore)
+    | FetchPosts
+    | RecordQuery String
+    | NextPosts
+    | PrevPosts
+    | OnLocationChange Location
+
+
+type alias Flags =
+    String
+
 
 type PostHint
     = RichVideo
