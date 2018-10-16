@@ -1,5 +1,7 @@
 module Decode exposing (..)
 
+-- import Json.Decode.Pipeline exposing (required, optional, hardcoded)
+
 import Json.Decode as JD exposing (Decoder, andThen, at, field, int, list, string)
 import Models exposing (DataStore, Model, Post, PostHint(..), PostList, Route(..), SubReddit)
 
