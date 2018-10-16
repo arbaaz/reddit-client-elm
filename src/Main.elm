@@ -2,13 +2,13 @@ port module Main exposing (..)
 
 import Api exposing (fetchPosts, nextPosts, prevPosts)
 import Html exposing (..)
-import Models exposing (Flags, Model, Msg(..), Route)
+import Models exposing (Flags, Model, Msg(..), Route, SearchHistory)
 import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation, routeParser, router)
 import Set exposing (fromList, toList)
 
 
-port setStorage : List String -> Cmd msg
+port setStorage : SearchHistory -> Cmd msg
 
 
 port toJs : String -> Cmd msg
@@ -77,12 +77,8 @@ subscriptions model =
 
 initModel : Route -> Model
 initModel route =
-    let
-        query =
-            routeParser route
-    in
     { data = []
-    , query = query
+    , query = routeParser route
     , error = ""
     , after = ""
     , before = ""

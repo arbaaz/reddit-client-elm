@@ -61,6 +61,10 @@ type alias DataStore =
     }
 
 
+type alias SearchHistory =
+    List String
+
+
 type alias Model =
     { data : PostList
     , query : String
@@ -71,5 +75,5 @@ type alias Model =
     , limit : String
     , count : String
     , route : Route
-    , history : List String
+    , history : SearchHistory
     }
