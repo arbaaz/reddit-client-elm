@@ -1,10 +1,17 @@
 module View.Post exposing (..)
 
 -- import Debug exposing (..)
+-- import Material.Elevation as Elevation
+-- import Material
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Models exposing (Post, PostHint(..), PostId, PostList, SubReddit)
+import Material.Button as Button
+import Material.Card as Card
+import Material.Color as Color
+import Material.Icon as Icon
+import Material.Options as Options exposing (cs, css)
+import Models exposing (Mdl, Post, PostHint(..), PostId, PostList, SubReddit)
 import View.Iframe exposing (renderIframe)
 
 
@@ -46,32 +53,67 @@ redditPath pathName =
     "http://reddit.com/" ++ pathName
 
 
-renderPost : ( SubReddit, Post ) -> Html msg
-renderPost ( sub, post ) =
+white : Options.Property c m
+white =
+    Color.text Color.white
+
+
+renderPost : ( SubReddit, Post, Mdl ) -> Html Models.Msg
+renderPost ( sub, post, mdl ) =
     let
+        imageSrc =
+            getPreview post.source
+
+        background =
+            "url(" ++ imageSrc ++ ") center / cover"
+
         media =
             if isRichVideo post then
                 div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ]
                     [ renderIframe (Maybe.withDefault "" post.mediaUrl) ]
-            else if post.source == Just "" then
-                img [ class "card-img-top", src (getPreview post.source) ] []
             else
                 a [ href post.imageUrl ]
-                    [ img [ class "card-img-top", src (getPreview post.source) ] []
+                    [ img [ class "card-img-top", src imageSrc ] []
                     ]
     in
     if hasPreview post then
-        div
-            [ class "card" ]
-            [ media
-            , a [ href (postPath ( sub, post.id )) ]
-                [ text post.title ]
-            , a [ href (redditPath post.postUrl) ] [ text "open in reddit" ]
+        Card.view
+            [ css "width" "400px"
+            , css "margin-bottom" "20px"
+            , Color.background (Color.color Color.DeepPurple Color.S300)
+            ]
+            [ Card.title []
+                [ Card.head [ white ] [ text post.title ]
+                ]
+            , Card.media
+                [ css "background" "none"
+                ]
+                [ img [ class "card-img-top", src imageSrc ] [] ]
+            , Card.menu []
+                [ Button.render Mdl
+                    [ 0, 0 ]
+                    mdl
+                    [ Button.icon, Button.ripple, white ]
+                    [ Icon.i "share" ]
+                ]
+            , Card.actions
+                [ Card.border, css "vertical-align" "center", css "text-align" "right", white ]
+                [ Button.render Mdl
+                    [ 8, 1 ]
+                    mdl
+                    [ Button.icon, Button.ripple ]
+                    [ Icon.i "favorite_border" ]
+                , Button.render Mdl
+                    [ 8, 2 ]
+                    mdl
+                    [ Button.icon, Button.ripple ]
+                    [ Icon.i "event_available" ]
+                ]
             ]
     else
         div [] []
 
 
-renderPosts : ( SubReddit, PostList ) -> Html msg
-renderPosts ( sub, posts ) =
-    div [ class "postList" ] (List.map (\post -> renderPost ( sub, post )) posts)
+renderPosts : ( SubReddit, PostList, Mdl ) -> Html Models.Msg
+renderPosts ( sub, posts, mdl ) =
+    div [ class "postList" ] (List.map (\post -> renderPost ( sub, post, mdl )) posts)

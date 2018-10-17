@@ -1,7 +1,12 @@
 module Models exposing (..)
 
 import Http
+import Material
 import Navigation exposing (Location)
+
+
+type alias Mdl =
+    Material.Model
 
 
 type Msg
@@ -11,6 +16,7 @@ type Msg
     | NextPosts
     | PrevPosts
     | OnLocationChange Location
+    | Mdl (Material.Msg Msg)
 
 
 type alias Flags =
@@ -67,6 +73,7 @@ type alias SearchHistory =
 
 type alias Model =
     { data : PostList
+    , mdl : Mdl
     , query : String
     , error : String
     , after : String

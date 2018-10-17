@@ -41,7 +41,7 @@ router model =
             in
             case postItem of
                 Just post ->
-                    renderPost ( sub, post )
+                    renderPost ( sub, post, model.mdl )
 
                 Nothing ->
                     notFoundView

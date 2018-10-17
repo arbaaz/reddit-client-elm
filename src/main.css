@@ -28,8 +28,12 @@ img {
 }
 
 .card-img-top {
-  max-width: 370px;
+  max-width: 400px;
   height: auto;
+}
+
+.hide {
+  visibility: hidden;
 }
 
 .input-group {

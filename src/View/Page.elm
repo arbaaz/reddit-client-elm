@@ -1,8 +1,11 @@
 module View.Page exposing (..)
 
+-- import Material.Progress as Loading
+
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Models exposing (Model, Msg)
+import Material.Spinner as Loading
+import Models exposing (Mdl, Model, Msg)
 import View.ActionBar exposing (actionBar)
 import View.Post exposing (renderPosts)
 
@@ -18,15 +21,16 @@ page model =
 
         inner =
             div [ class "form" ]
-                [ actionBar
+                [ actionBar model
                 , br [] []
-                , renderPosts ( query, posts )
+                , renderPosts ( query, posts, model.mdl )
                 ]
     in
     div [ id "outer" ]
-        [ if model.loading then
-            div [ class "loader" ] []
-          else
-            inner
+        [ Loading.spinner
+            [ Loading.active model.loading
+            , Loading.singleColor True
+            ]
+        , inner
         , div [] [ text model.error ]
         ]

@@ -16,7 +16,7 @@ homePage model =
                 renderLinks
                 model.history
             )
-        , actionBar
+        , actionBar model
         ]
 
 

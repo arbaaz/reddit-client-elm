@@ -2,7 +2,9 @@ port module Main exposing (..)
 
 import Api exposing (fetchPosts, nextPosts, prevPosts)
 import Html exposing (..)
-import Models exposing (Flags, Model, Msg(..), Route, SearchHistory)
+import Material
+import Material.Scheme
+import Models exposing (Flags, Mdl, Model, Msg(..), Route, SearchHistory)
 import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation, routeParser, router)
 import Set exposing (fromList, toList)
@@ -14,7 +16,7 @@ port setStorage : SearchHistory -> Cmd msg
 port toJs : String -> Cmd msg
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Models.Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnLocationChange location ->
@@ -63,11 +65,16 @@ update msg model =
         RecordQuery query ->
             ( { model | query = query, after = "", before = "" }, Cmd.none )
 
+        Mdl msg ->
+            Material.update Mdl msg model
+
 
 view : Model -> Html Msg
 view model =
     div []
-        [ router model ]
+        [ router model
+        ]
+        |> Material.Scheme.top
 
 
 subscriptions : Model -> Sub Msg
@@ -87,6 +94,7 @@ initModel route =
     , count = "0"
     , route = route
     , history = []
+    , mdl = Material.model
     }
 
 
