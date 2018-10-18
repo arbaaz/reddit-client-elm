@@ -8,7 +8,6 @@ body {
 }
 
 #root {
-  width: 400px;
   margin: 0 auto;
 }
 
@@ -18,18 +17,12 @@ h1 {
 
 img {
   margin: 20px 0;
-  max-width: 200px;
 }
 
 .card {
   max-width: 370px;
   margin: 0 auto;
   margin-bottom: 15px;
-}
-
-.card-img-top {
-  max-width: 370px;
-  height: auto;
 }
 
 .input-group {
@@ -62,4 +55,25 @@ img {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+img {
+  max-width: 400px;
+  transition: all 2s;
+}
+
+.img:hover {
+  transform: scale(1.1);
+}
+
+.img {
+  margin: 5px;
+  max-width: 400px;
+  transition: all 2s;
 }

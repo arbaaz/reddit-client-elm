@@ -57,21 +57,52 @@ renderPost ( sub, post ) =
                 img [ class "card-img-top", src (getPreview post.source) ] []
             else
                 a [ href post.imageUrl ]
-                    [ img [ class "card-img-top", src (getPreview post.source) ] []
+                    [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
                     ]
     in
     if hasPreview post then
-        div
-            [ class "card" ]
-            [ media
-            , a [ href (postPath ( sub, post.id )) ]
-                [ text post.title ]
-            , a [ href (redditPath post.postUrl) ] [ text "open in reddit" ]
+        div [ class "col col-xs-12" ]
+            [ div
+                [ class "card" ]
+                [ media
+                , a [ href (postPath ( sub, post.id )) ]
+                    [ text post.title ]
+                , a [ href (redditPath post.postUrl) ] [ text "open in reddit" ]
+                ]
             ]
     else
         div [] []
 
 
+split : Int -> List a -> List (List a)
+split i list =
+    case List.take i list of
+        [] ->
+            []
+
+        listHead ->
+            listHead :: split i (List.drop i list)
+
+
 renderPosts : ( SubReddit, PostList ) -> Html msg
 renderPosts ( sub, posts ) =
-    div [ class "postList" ] (List.map (\post -> renderPost ( sub, post )) posts)
+    let
+        data =
+            split 4 posts
+    in
+    div [ class "container-fluid " ]
+        (List.map
+            (\posts ->
+                div [ class "row" ] (List.map (\post -> renderPost ( sub, post )) posts)
+            )
+            data
+        )
+
+
+renderGallery : ( SubReddit, PostList ) -> Html msg
+renderGallery ( sub, posts ) =
+    let
+        imgList =
+            List.map .source posts |> List.map getPreview
+    in
+    div [ class "gallery" ] (List.map (\url -> div [ class "img" ] [ img [ src url ] [] ]) imgList)
