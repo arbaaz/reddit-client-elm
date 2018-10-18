@@ -105,4 +105,4 @@ renderGallery ( sub, posts ) =
         imgList =
             List.map .source posts |> List.map getPreview
     in
-    div [ class "gallery" ] (List.map (\url -> div [ class "img" ] [ img [ src url ] [] ]) imgList)
+    div [ id "masonry" ] (List.map (\url -> img [ src url ] []) imgList)

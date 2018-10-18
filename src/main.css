@@ -8,21 +8,12 @@ body {
 }
 
 #root {
+  max-width: 400px;
   margin: 0 auto;
-}
-
-h1 {
-  font-size: 30px;
 }
 
 img {
-  margin: 20px 0;
-}
-
-.card {
-  max-width: 370px;
-  margin: 0 auto;
-  margin-bottom: 15px;
+  margin: 15px 0;
 }
 
 .input-group {
@@ -57,23 +48,38 @@ img {
   }
 }
 
-.gallery {
+body {
+  margin: 0;
+  background: #131212;
+}
+
+div#masonry {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
-  justify-content: center;
 }
 
-img {
+div#masonry img {
   max-width: 400px;
-  transition: all 2s;
+  transition: 0.8s opacity;
 }
 
-.img:hover {
-  transform: scale(1.1);
+div#masonry:hover img {
+  opacity: 0.3;
 }
 
-.img {
-  margin: 5px;
-  max-width: 400px;
-  transition: all 2s;
+div#masonry:hover img:hover {
+  opacity: 1;
+}
+
+/* fallback for earlier versions of Firefox */
+
+@supports not (flex-wrap: wrap) {
+  div#masonry {
+    display: block;
+  }
+  div#masonry img {
+    display: inline-block;
+    vertical-align: top;
+  }
 }
