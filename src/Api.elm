@@ -7,14 +7,17 @@ import Models exposing (DataStore, Model, Msg(..))
 
 request : String -> Cmd Msg
 request url =
-    let
-        req =
-            Http.get url dataDecoder
-
-        cmd =
-            Http.send Posts req
-    in
-    cmd
+    Http.send Posts
+        (Http.request
+            { method = "GET"
+            , headers = []
+            , url = url
+            , body = Http.emptyBody
+            , expect = Http.expectJson dataDecoder
+            , timeout = Nothing
+            , withCredentials = False
+            }
+        )
 
 
 fetchPosts : Model -> Cmd Msg
