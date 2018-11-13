@@ -20,7 +20,7 @@ page model =
             div [ class "form" ]
                 [ actionBar
                 , br [] []
-                , renderGallery ( query, posts )
+                , renderPosts ( query, posts )
                 ]
     in
     div [ id "outer" ]

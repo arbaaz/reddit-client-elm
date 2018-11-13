@@ -18,7 +18,7 @@ type alias Flags =
 
 
 type PostHint
-    = RichVideo
+    = Video
     | Image
     | Link
     | Unknown

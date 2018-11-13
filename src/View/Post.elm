@@ -31,10 +31,10 @@ postPath ( sub, id ) =
     "#r/" ++ sub ++ "/" ++ id
 
 
-isRichVideo : Post -> Bool
-isRichVideo postHint =
-    case postHint.postHint of
-        RichVideo ->
+isGif : Post -> Bool
+isGif post =
+    case post.postHint of
+        Video ->
             True
 
         _ ->
@@ -50,9 +50,11 @@ renderPost : ( SubReddit, Post ) -> Html msg
 renderPost ( sub, post ) =
     let
         media =
-            if isRichVideo post then
+            if isGif post then
                 div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ]
-                    [ renderIframe (Maybe.withDefault "" post.mediaUrl) ]
+                    [ renderIframe
+                        (Maybe.withDefault "" post.mediaUrl)
+                    ]
             else if post.source == Just "" then
                 img [ class "card-img-top", src (getPreview post.source) ] []
             else
@@ -64,7 +66,9 @@ renderPost ( sub, post ) =
         div [ class "col col-xs-12" ]
             [ div
                 [ class "card" ]
-                [ media
+                [ div [ class "post-hint" ]
+                    [ text (toString post.postHint) ]
+                , media
                 , a [ href (postPath ( sub, post.id )) ]
                     [ text post.title ]
                 , a [ href (redditPath post.postUrl) ] [ text "open in reddit" ]
@@ -86,17 +90,8 @@ split i list =
 
 renderPosts : ( SubReddit, PostList ) -> Html msg
 renderPosts ( sub, posts ) =
-    let
-        data =
-            split 4 posts
-    in
     div [ class "container-fluid " ]
-        (List.map
-            (\posts ->
-                div [ class "row" ] (List.map (\post -> renderPost ( sub, post )) posts)
-            )
-            data
-        )
+        (List.map (\post -> renderPost ( sub, post )) posts)
 
 
 renderGallery : ( SubReddit, PostList ) -> Html msg

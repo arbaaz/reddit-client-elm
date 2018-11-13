@@ -3,14 +3,14 @@ module Decode exposing (..)
 -- import Json.Decode.Pipeline exposing (required, optional, hardcoded)
 
 import Json.Decode as JD exposing (Decoder, andThen, at, field, int, list, string)
-import Models exposing (DataStore, Model, Post, PostHint(..), PostList, Route(..), SubReddit)
+import Models exposing (DataStore, Model, Post, PostHint(Image, Link, Unknown, Video), PostList, Route(..), SubReddit)
 
 
 postHint : String -> Decoder PostHint
 postHint hint =
     case hint of
         "rich:video" ->
-            JD.succeed RichVideo
+            JD.succeed Video
 
         "image" ->
             JD.succeed Image

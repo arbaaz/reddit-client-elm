@@ -61,25 +61,18 @@ div#masonry {
 
 div#masonry img {
   max-width: 400px;
-  transition: 0.8s opacity;
 }
 
-div#masonry:hover img {
-  opacity: 0.3;
+.card {
+  margin-bottom: 15px;
 }
 
-div#masonry:hover img:hover {
-  opacity: 1;
-}
-
-/* fallback for earlier versions of Firefox */
-
-@supports not (flex-wrap: wrap) {
-  div#masonry {
-    display: block;
-  }
-  div#masonry img {
-    display: inline-block;
-    vertical-align: top;
-  }
+.card > .post-hint {
+  top: 5px;
+  z-index: 1;
+  right: 5px;
+  position: absolute;
+  background: red;
+  padding: 2px;
+  font-size: 8px;
 }

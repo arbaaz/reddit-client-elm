@@ -1,7 +1,7 @@
 module View.Iframe exposing (..)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html exposing (Html, iframe)
+import Html.Attributes exposing (attribute, src, style)
 
 
 renderIframe : String -> Html msg

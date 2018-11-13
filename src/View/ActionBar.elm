@@ -1,9 +1,9 @@
 module View.ActionBar exposing (actionBar)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html exposing (Html, button, div, input, text)
+import Html.Attributes exposing (class)
 import Html.Events exposing (onClick, onInput)
-import Models exposing (Msg(..))
+import Models exposing (Msg(FetchPosts, NextPosts, PrevPosts, RecordQuery))
 
 
 actionBar : Html Msg
