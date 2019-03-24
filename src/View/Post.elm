@@ -13,9 +13,8 @@ urlDecode =
     String.split "&amp;" >> String.join "&"
 
 
-getPreview : Maybe String -> String
-getPreview =
-    Maybe.withDefault "" >> urlDecode
+getPreview : String -> String
+getPreview = urlDecode
 
 
 hasPreview : Post -> Bool
@@ -34,7 +33,7 @@ postPath ( sub, id ) =
 isGif : Post -> Bool
 isGif post =
     case post.postHint of
-        Video ->
+        "rich:video" ->
             True
 
         _ ->
@@ -52,10 +51,9 @@ renderPost ( sub, post ) =
         media =
             if isGif post then
                 div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ]
-                    [ renderIframe
-                        (Maybe.withDefault "" post.mediaUrl)
+                    [ renderIframe post.mediaUrl
                     ]
-            else if post.source == Just "" then
+            else if post.source == "" then
                 img [ class "card-img-top", src (getPreview post.source) ] []
             else
                 a [ href post.imageUrl ]

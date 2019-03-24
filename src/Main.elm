@@ -32,9 +32,9 @@ update msg model =
 
         Posts (Ok x) ->
             ( { model
-                | data = List.reverse (List.sortBy .ups x.children)
-                , after = Maybe.withDefault "" x.after
-                , before = Maybe.withDefault "" x.before
+                | data = List.reverse (List.sortBy .ups x)
+                -- , after = Maybe.withDefault "" x.after
+                -- , before = Maybe.withDefault "" x.before
                 , loading = False
                 , error = ""
               }
@@ -109,4 +109,5 @@ main =
         , update = update
         , view = view
         , subscriptions = subscriptions
+        
         }

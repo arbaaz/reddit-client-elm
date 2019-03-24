@@ -5,7 +5,7 @@ import Navigation exposing (Location)
 
 
 type Msg
-    = Posts (Result Http.Error DataStore)
+    = Posts (Result Http.Error PostList)
     | FetchPosts
     | RecordQuery String
     | NextPosts
@@ -30,9 +30,9 @@ type alias Post =
     , postUrl : String
     , title : String
     , ups : Int
-    , postHint : PostHint
-    , source : Maybe String
-    , mediaUrl : Maybe String
+    , postHint : String
+    , source : String
+    , mediaUrl : String
     }
 
 
@@ -52,13 +52,6 @@ type alias PostId =
 
 type alias PostList =
     List Post
-
-
-type alias DataStore =
-    { after : Maybe String
-    , before : Maybe String
-    , children : PostList
-    }
 
 
 type alias SearchHistory =
