@@ -11,7 +11,7 @@ page : Model -> Html Msg
 page model =
     let
         posts =
-            model.data
+            model.children
 
         query =
             model.query

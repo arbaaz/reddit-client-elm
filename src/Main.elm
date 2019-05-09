@@ -32,9 +32,8 @@ update msg model =
 
         Posts (Ok x) ->
             ( { model
-                | data = List.reverse (List.sortBy .ups x)
-                -- , after = Maybe.withDefault "" x.after
-                -- , before = Maybe.withDefault "" x.before
+                | children = x 
+                -- List.reverse (List.sortBy .ups x)
                 , loading = False
                 , error = ""
               }
@@ -77,7 +76,7 @@ subscriptions model =
 
 initModel : Route -> Model
 initModel route =
-    { data = []
+    { children = []
     , query = routeParser route
     , error = ""
     , after = ""
@@ -109,5 +108,4 @@ main =
         , update = update
         , view = view
         , subscriptions = subscriptions
-        
         }

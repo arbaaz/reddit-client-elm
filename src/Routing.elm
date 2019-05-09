@@ -37,7 +37,7 @@ router model =
         PostRoute sub id ->
             let
                 postItem =
-                    List.head (List.filter (\m -> m.id == id) model.data)
+                    List.head (List.filter (\m -> m.id == id) model.children)
             in
             case postItem of
                 Just post ->

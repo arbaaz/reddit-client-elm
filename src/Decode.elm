@@ -20,5 +20,5 @@ postDecoder =
 
 postsDecoder : Decoder PostList
 postsDecoder =
-    JD.list postDecoder
+    (JD.at [ "children" ] (JD.list postDecoder))
 

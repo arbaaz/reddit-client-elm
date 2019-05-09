@@ -59,7 +59,7 @@ type alias SearchHistory =
 
 
 type alias Model =
-    { data : PostList
+    { children : PostList
     , query : String
     , error : String
     , after : String
