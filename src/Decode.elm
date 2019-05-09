@@ -17,7 +17,6 @@ postDecoder =
         |> optional "media_embed" string ""
 
 
-
 postsDecoder : Decoder PostList
 postsDecoder =
     (JD.at [ "children" ] (JD.list postDecoder))
