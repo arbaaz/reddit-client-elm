@@ -5,8 +5,8 @@ import Http
 import Models exposing (Model, Msg(..))
 
 host: String
-host = "https://redditcr.herokuapp.com/"
--- host ="http://localhost:6001"
+-- host = "https://redditcr.herokuapp.com"
+host ="http://localhost:6001"
 
 request : String -> Cmd Msg
 request url =
@@ -27,11 +27,7 @@ fetchPosts : Model -> Cmd Msg
 fetchPosts model =
     let
         url =
-            host ++ String.trim model.query
-                -- ++ "/new.json?limit="
-                -- ++ model.limit
-                -- ++ "&count="
-                -- ++ model.count
+            host ++ "/reddit?query=" ++ String.trim model.query
     in
     request url
 
@@ -40,13 +36,9 @@ nextPosts : Model -> Cmd Msg
 nextPosts model =
     let
         url =
-            host ++ String.trim model.query
-                -- ++ "/new.json?limit="
-                -- ++ model.limit
-                -- ++ "&count="
-                -- ++ model.count
-                -- ++ "&after="
-                -- ++ model.after
+            host ++ "/reddit?query=" ++ String.trim model.query
+                ++ "&after="
+                ++ model.after
     in
     request url
 
@@ -55,12 +47,8 @@ prevPosts : Model -> Cmd Msg
 prevPosts model =
     let
         url =
-            host ++ String.trim model.query
-                -- ++ "/new.json?limit="
-                -- ++ model.limit
-                -- ++ "&count="
-                -- ++ model.count
-                -- ++ "before="
-                -- ++ model.before
+            host ++ "/reddit?query=" ++ String.trim model.query
+                ++ "&before="
+                ++ model.before
     in
     request url

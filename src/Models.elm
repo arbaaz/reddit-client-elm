@@ -5,7 +5,7 @@ import Navigation exposing (Location)
 
 
 type Msg
-    = Posts (Result Http.Error PostList)
+    = Posts (Result Http.Error Response)
     | FetchPosts
     | RecordQuery String
     | NextPosts
@@ -70,3 +70,9 @@ type alias Model =
     , route : Route
     , history : SearchHistory
     }
+
+type alias Response = {
+    children: PostList
+    , after : String
+    , before : String
+}

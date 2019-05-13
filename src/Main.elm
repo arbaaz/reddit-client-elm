@@ -9,8 +9,6 @@ import Set exposing (fromList, toList)
 
 
 port setStorage : SearchHistory -> Cmd msg
-
-
 port toJs : String -> Cmd msg
 
 
@@ -32,8 +30,11 @@ update msg model =
 
         Posts (Ok x) ->
             ( { model
-                | children = x 
-                -- List.reverse (List.sortBy .ups x)
+                | 
+                children = x.children
+                --  List.reverse (List.sortBy .ups x.children)
+                , after = x.after
+                , before = x.before
                 , loading = False
                 , error = ""
               }

@@ -2,7 +2,7 @@ module Decode exposing (..)
 
 import Json.Decode.Pipeline exposing (decode, required, optional)
 import Json.Decode as JD exposing (Decoder, int, string)
-import Models exposing (Post, PostList)
+import Models exposing (Post, PostList, Response)
 
 postDecoder : Decoder Post
 postDecoder =
@@ -17,7 +17,11 @@ postDecoder =
         |> optional "media_embed" string ""
 
 
-postsDecoder : Decoder PostList
+postsDecoder : Decoder Response
 postsDecoder =
-    (JD.at [ "children" ] (JD.list postDecoder))
+    decode Response
+    |> required "children" (JD.list postDecoder)
+    |> optional "after"  string ""
+    |> optional "before" string ""
+    
 
