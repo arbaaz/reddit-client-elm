@@ -5,8 +5,8 @@ import Http
 import Models exposing (Model, Msg(..))
 
 host: String
--- host = "https://redditcr.herokuapp.com"
-host ="http://localhost:6001"
+host = "https://redditcr.herokuapp.com"
+-- host ="http://localhost:6001"
 
 request : String -> Cmd Msg
 request url =
