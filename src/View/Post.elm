@@ -50,8 +50,7 @@ renderPost ( sub, post ) =
     let
         media =
             if isGif post then
-                div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ]
-                     (renderIframe post.mediaUrl)
+                div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ](renderIframe post.mediaUrl)
                     
             else if post.source == "" then
                 img [ class "card-img-top", src (getPreview post.source) ] []
