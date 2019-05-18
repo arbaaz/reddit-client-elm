@@ -1,4 +1,4 @@
-module Models exposing (..)
+module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), SearchHistory, SubReddit)
 
 import Http
 import Navigation exposing (Location)
@@ -11,6 +11,7 @@ type Msg
     | NextPosts
     | PrevPosts
     | OnLocationChange Location
+    | ChangeSelection String
 
 
 type alias Flags =
@@ -50,6 +51,10 @@ type alias PostId =
     String
 
 
+type alias Mode =
+    String
+
+
 type alias PostList =
     List Post
 
@@ -69,10 +74,12 @@ type alias Model =
     , count : String
     , route : Route
     , history : SearchHistory
+    , mode : Mode
     }
 
-type alias Response = {
-    children: PostList
+
+type alias Response =
+    { children : PostList
     , after : String
     , before : String
-}
+    }

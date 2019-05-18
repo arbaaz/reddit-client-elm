@@ -4,9 +4,16 @@ import Decode exposing (postsDecoder)
 import Http
 import Models exposing (Model, Msg(..))
 
-host: String
+
+host : String
+
+
+
 host = "https://redditcr.herokuapp.com"
 -- host ="http://localhost:6001"
+-- host =
+--     "http://192.168.0.107:6001"
+
 
 request : String -> Cmd Msg
 request url =
@@ -36,7 +43,9 @@ nextPosts : Model -> Cmd Msg
 nextPosts model =
     let
         url =
-            host ++ "/reddit?query=" ++ String.trim model.query
+            host
+                ++ "/reddit?query="
+                ++ String.trim model.query
                 ++ "&after="
                 ++ model.after
     in
@@ -47,7 +56,9 @@ prevPosts : Model -> Cmd Msg
 prevPosts model =
     let
         url =
-            host ++ "/reddit?query=" ++ String.trim model.query
+            host
+                ++ "/reddit?query="
+                ++ String.trim model.query
                 ++ "&before="
                 ++ model.before
     in

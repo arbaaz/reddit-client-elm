@@ -1,4 +1,4 @@
-port module Main exposing (..)
+port module Main exposing (init, initModel, main, setStorage, subscriptions, toJs, update, view)
 
 import Api exposing (fetchPosts, nextPosts, prevPosts)
 import Html exposing (..)
@@ -9,6 +9,8 @@ import Set exposing (fromList, toList)
 
 
 port setStorage : SearchHistory -> Cmd msg
+
+
 port toJs : String -> Cmd msg
 
 
@@ -30,8 +32,8 @@ update msg model =
 
         Posts (Ok x) ->
             ( { model
-                | 
-                children = x.children
+                | children = x.children
+
                 --  List.reverse (List.sortBy .ups x.children)
                 , after = x.after
                 , before = x.before
@@ -63,6 +65,9 @@ update msg model =
         RecordQuery query ->
             ( { model | query = query, after = "", before = "" }, Cmd.none )
 
+        ChangeSelection value ->
+            ( { model | mode = value }, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -87,6 +92,7 @@ initModel route =
     , count = "0"
     , route = route
     , history = []
+    , mode = "on"
     }
 
 

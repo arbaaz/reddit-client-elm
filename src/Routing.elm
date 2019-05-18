@@ -1,4 +1,4 @@
-module Routing exposing (..)
+module Routing exposing (matchers, parseLocation, routeParser, router)
 
 import Html exposing (Html)
 import Models exposing (Model, Msg(..), Route(..))
@@ -41,7 +41,7 @@ router model =
             in
             case postItem of
                 Just post ->
-                    renderPost ( sub, post )
+                    renderPost ( sub, post, model.mode )
 
                 Nothing ->
                     notFoundView
