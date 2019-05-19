@@ -1,4 +1,4 @@
-module View.Post exposing (getPreview, hasPreview, isGif, postPath, redditPath, renderPost, renderPosts, split, urlDecode)
+module View.Post exposing (getPreview, hasPreview, isGif, postPath, redditPath, renderDetailPost, renderPost, renderPosts, split, urlDecode)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -45,30 +45,43 @@ redditPath pathName =
     "http://reddit.com/" ++ pathName
 
 
-renderPost : ( SubReddit, Post, Mode ) -> Html msg
-renderPost ( sub, post, mode ) =
+renderDetailPost : ( SubReddit, Post, Mode ) -> Html msg
+renderDetailPost ( sub, post, mode ) =
     let
         media =
             if isGif post then
-                div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ] [ renderIframe post.imageUrl ]
-
-            else if post.source == "" then
-                img [ class "card-img-top", src (getPreview post.source) ] []
+                div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ] [ renderIframe post.mediaUrl ]
 
             else
-                a [ href post.imageUrl ]
+                div [] [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] [] ]
+    in
+    div [] [ media ]
+
+
+renderPost : ( SubReddit, Post, Mode ) -> Html msg
+renderPost ( sub, post, mode ) =
+    let
+        post_path =
+            postPath ( sub, post.id )
+
+        image_view =
+            if mode == "t10gif" then
+                div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ] [ renderIframe post.mediaUrl ]
+
+            else
+                a [ href post_path ]
                     [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
                     ]
     in
     if hasPreview post then
-        if mode == "on" then
+        if mode /= "off" then
             div [ class "row" ]
                 [ div [ class "col col-xs-12" ]
                     [ div
                         [ class "card" ]
                         [ div [ class "post-hint" ]
                             [ text (toString post.postHint) ]
-                        , media
+                        , image_view
                         ]
                     ]
                 ]
@@ -81,7 +94,7 @@ renderPost ( sub, post, mode ) =
                         [ text post.title ]
                     , div [ class "post-hint" ]
                         [ text (toString post.postHint) ]
-                    , media
+                    , image_view
                     , a [ href (redditPath post.postUrl) ] [ text "open in reddit" ]
                     ]
                 ]

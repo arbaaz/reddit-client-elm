@@ -7,7 +7,7 @@ import UrlParser exposing (..)
 import View.HomePage exposing (homePage)
 import View.NotFound exposing (notFoundView)
 import View.Page exposing (page)
-import View.Post exposing (renderPost)
+import View.Post exposing (renderDetailPost, renderPost)
 
 
 matchers : Parser (Route -> a) a
@@ -41,7 +41,7 @@ router model =
             in
             case postItem of
                 Just post ->
-                    renderPost ( sub, post, model.mode )
+                    renderDetailPost ( sub, post, model.mode )
 
                 Nothing ->
                     notFoundView

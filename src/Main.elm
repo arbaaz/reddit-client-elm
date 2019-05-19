@@ -6,6 +6,7 @@ import Models exposing (Flags, Model, Msg(..), Route, SearchHistory)
 import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation, routeParser, router)
 import Set exposing (fromList, toList)
+import View.Post exposing (isGif)
 
 
 port setStorage : SearchHistory -> Cmd msg
@@ -32,9 +33,7 @@ update msg model =
 
         Posts (Ok x) ->
             ( { model
-                | children = x.children
-
-                --  List.reverse (List.sortBy .ups x.children)
+                | children = filterData ( model.mode, x.children )
                 , after = x.after
                 , before = x.before
                 , loading = False
@@ -66,7 +65,22 @@ update msg model =
             ( { model | query = query, after = "", before = "" }, Cmd.none )
 
         ChangeSelection value ->
-            ( { model | mode = value }, Cmd.none )
+            ( { model | children = filterData ( value, model.children ), mode = value }, Cmd.none )
+
+
+filterData : ( String, List Models.Post ) -> List Models.Post
+filterData ( mode, children ) =
+    if mode == "gif" then
+        List.filter isGif children
+
+    else if mode == "t10" then
+        List.take 10 children
+
+    else if mode == "t10gif" then
+        List.take 10 (List.filter isGif children)
+
+    else
+        children
 
 
 view : Model -> Html Msg

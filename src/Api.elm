@@ -6,10 +6,11 @@ import Models exposing (Model, Msg(..))
 
 
 host : String
+host =
+    "https://redditcr.herokuapp.com"
 
 
 
-host = "https://redditcr.herokuapp.com"
 -- host ="http://localhost:6001"
 -- host =
 --     "http://192.168.0.107:6001"
