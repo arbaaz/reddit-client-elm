@@ -6,12 +6,18 @@ import Models exposing (Model, Msg(..))
 
 
 host : String
+
+
+
 host =
     "https://redditcr.herokuapp.com"
 
 
+-- host =
+--     "http://localhost:6001"
 
--- host ="http://localhost:6001"
+
+
 -- host =
 --     "http://192.168.0.107:6001"
 
@@ -31,11 +37,23 @@ request url =
         )
 
 
+buildUrl model =
+    let
+        url =
+            host ++ "/reddit?query=" ++ String.trim model.query ++ "&count=" ++ model.count
+    in
+    if model.after /= "" then
+        url ++ "&after=" ++ model.after
+
+    else
+        url
+
+
 fetchPosts : Model -> Cmd Msg
 fetchPosts model =
     let
         url =
-            host ++ "/reddit?query=" ++ String.trim model.query
+            buildUrl model
     in
     request url
 
@@ -44,11 +62,7 @@ nextPosts : Model -> Cmd Msg
 nextPosts model =
     let
         url =
-            host
-                ++ "/reddit?query="
-                ++ String.trim model.query
-                ++ "&after="
-                ++ model.after
+            buildUrl model
     in
     request url
 

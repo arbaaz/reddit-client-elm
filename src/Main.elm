@@ -65,7 +65,21 @@ update msg model =
             ( { model | query = query, after = "", before = "" }, Cmd.none )
 
         ChangeSelection value ->
-            ( { model | children = filterData ( value, model.children ), mode = value }, Cmd.none )
+            let
+                count =
+                    if value == "10" then
+                        value
+
+                    else if value == "100" then
+                        value
+
+                    else if value == "25" then
+                        value
+
+                    else
+                        model.count
+            in
+            ( { model | children = filterData ( value, model.children ), mode = value, count = count }, Cmd.none )
 
 
 filterData : ( String, List Models.Post ) -> List Models.Post
@@ -102,8 +116,8 @@ initModel route =
     , after = ""
     , before = ""
     , loading = False
-    , limit = "26"
-    , count = "0"
+    , limit = "10"
+    , count = "10"
     , route = route
     , history = []
     , mode = "on"
