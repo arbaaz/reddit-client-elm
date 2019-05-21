@@ -1,8 +1,9 @@
 port module Main exposing (init, initModel, main, setStorage, subscriptions, toJs, update, view)
 
 import Api exposing (fetchPosts, nextPosts, prevPosts)
+import Debug exposing (log)
 import Html exposing (..)
-import Models exposing (Flags, Model, Msg(..), Route, SearchHistory)
+import Models exposing (Flags, Model, Msg(..), Route(..), SearchHistory)
 import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation, routeParser, router)
 import Set exposing (fromList, toList)
@@ -21,15 +22,26 @@ update msg model =
         OnLocationChange location ->
             let
                 newRoute =
-                    parseLocation location
+                    log "newRoute" (parseLocation location)
 
                 query =
                     routeParser newRoute
 
                 newModel =
                     { model | route = newRoute, query = query }
+
+                cmd =
+                    case newRoute of
+                        PostRoute sub id ->
+                            Cmd.none
+
+                        SubRedditRoute sub ->
+                            fetchPosts newModel
+
+                        NotFoundRoute ->
+                            Cmd.none
             in
-            ( newModel, fetchPosts newModel )
+            ( newModel, cmd )
 
         Posts (Ok x) ->
             ( { model

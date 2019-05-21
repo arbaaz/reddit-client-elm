@@ -12,16 +12,6 @@ body {
   margin: 0 auto;
 }
 
-img {
-  /* margin: 15px 0; */
-}
-
-.input-group {
-  position: fixed;
-  bottom: 0;
-  z-index: 9;
-}
-
 .postList {
   margin-bottom: 60px;
 }
@@ -48,16 +38,6 @@ img {
 body {
   margin: 0;
   background: #131212;
-}
-
-div#masonry {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-}
-
-div#masonry img {
-  max-width: 400px;
 }
 
 .card {

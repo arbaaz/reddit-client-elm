@@ -22,12 +22,19 @@ page model =
         inner =
             div [ class "form" ]
                 [ actionBar
-                , br [] []
-                , div [] [ text query ]
+                , nav [ class "navbar navbar-dark bg-dark" ]
+                    [ a [ class "navbar-brand", href "#" ]
+                        [ text "Home"
+                        ]
+                    , div
+                        []
+                        [ text query ]
+                    ]
                 , renderPosts ( query, posts, mode )
                 ]
     in
-    div [ id "outer" ]
+    div
+        [ id "outer" ]
         [ if model.loading then
             div [ class "loader" ] []
 

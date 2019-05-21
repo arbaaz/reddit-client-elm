@@ -1,41 +1,40 @@
 module View.ActionBar exposing (actionBar)
 
-import Html exposing (Html, button, div, input, option, select, text)
-import Html.Attributes exposing (class, value)
+import Html exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (on, onClick, onInput)
 import Models exposing (Msg(ChangeSelection, FetchPosts, NextPosts, PrevPosts, RecordQuery))
 
 
 actionBar : Html Msg
 actionBar =
-    div [ class "container-fluid" ]
-        [ div [ class "input-group" ]
-            [ div [ class "input-group-prepend" ]
-                [ -- button
-                  -- [ onClick PrevPosts, class "btn btn-secondary" ]
-                  -- [ text "Prev" ],
-                  select [ onInput ChangeSelection ]
-                    [ option [ value "off" ] [ text "mode" ]
-                    , option [ value "off" ] [ text "Off" ]
-                    , option [ value "on" ] [ text "Image_View" ]
-                    , option [ value "gif" ] [ text "Gif" ]
-                    , option [ value "t10" ] [ text "T10" ]
-                    , option [ value "t10gif" ] [ text "T10Gif" ]
-                    , option [ value "10" ] [ text "10" ]
-                    , option [ value "25" ] [ text "25" ]
-                    , option [ value "100" ] [ text "100" ]
+    nav [ class "navbar navbar-dark fixed-bottom bg-dark p-1" ]
+        [ Html.form [ class "form-inline" ]
+            [ div [ class "form-row" ]
+                [ div [ class "col-3 px-0" ]
+                    [ select [ class "custom-select", onInput ChangeSelection ]
+                        [ option [ selected True ] [ text "mode" ]
+                        , option [ value "off" ] [ text "Off" ]
+                        , option [ value "on" ] [ text "Image_View" ]
+                        , option [ value "gif" ] [ text "Filter Gifs" ]
+                        , option [ value "t10" ] [ text "Top 10" ]
+                        , option [ value "t10gif" ] [ text "Top 10 Gifs" ]
+                        , option [ value "10" ] [ text "10 results per page" ]
+                        , option [ value "25" ] [ text "25 results per page" ]
+                        , option [ value "100" ] [ text "100 results per page" ]
+                        ]
                     ]
-                ]
-            , input [ onInput RecordQuery ] []
-            , div [ class "input-group-append" ]
-                [ button
-                    [ onClick FetchPosts
-                    , class "btn btn-success"
+                , div [ class "col-4 px-0" ]
+                    [ input [ class "form-control", type_ "search", placeholder "Search", onInput RecordQuery ]
+                        []
                     ]
-                    [ text "Fetch" ]
-                , button
-                    [ onClick NextPosts, class "btn btn-primary" ]
-                    [ text "Next" ]
+                , div [ class "col-5 px-0" ]
+                    [ div [ class "btn-group" ]
+                        [ button [ onClick FetchPosts, class "btn btn-outline-success" ] [ text "Search" ]
+                        , button [ onClick NextPosts, class "btn btn-outline-primary" ]
+                            [ text "Next" ]
+                        ]
+                    ]
                 ]
             ]
         ]
