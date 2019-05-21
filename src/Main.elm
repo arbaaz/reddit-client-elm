@@ -1,6 +1,6 @@
 port module Main exposing (init, initModel, main, setStorage, subscriptions, toJs, update, view)
 
-import Api exposing (fetchPosts, nextPosts, prevPosts)
+import Api exposing (fetchPosts)
 import Debug exposing (log)
 import Html exposing (..)
 import Models exposing (Flags, Model, Msg(..), Route(..), SearchHistory)
@@ -66,12 +66,6 @@ update msg model =
                     { model | loading = True, history = history_ }
             in
             ( newModel, Cmd.batch [ modifyUrl ("#r/" ++ model.query), toJs model.query, setStorage newModel.history ] )
-
-        NextPosts ->
-            ( { model | loading = True }, nextPosts model )
-
-        PrevPosts ->
-            ( { model | loading = True }, prevPosts model )
 
         RecordQuery query ->
             ( { model | query = query, after = "", before = "" }, Cmd.none )

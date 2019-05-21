@@ -8,8 +8,6 @@ type Msg
     = Posts (Result Http.Error Response)
     | FetchPosts
     | RecordQuery String
-    | NextPosts
-    | PrevPosts
     | OnLocationChange Location
     | ChangeSelection String
 

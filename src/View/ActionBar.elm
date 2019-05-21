@@ -3,7 +3,7 @@ module View.ActionBar exposing (actionBar)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (on, onClick, onInput)
-import Models exposing (Msg(ChangeSelection, FetchPosts, NextPosts, PrevPosts, RecordQuery))
+import Models exposing (Msg(ChangeSelection, FetchPosts, RecordQuery))
 
 
 actionBar : Html Msg
@@ -11,7 +11,7 @@ actionBar =
     nav [ class "navbar navbar-dark fixed-bottom bg-dark p-1" ]
         [ Html.form [ class "form-inline" ]
             [ div [ class "form-row" ]
-                [ div [ class "col-3 px-0" ]
+                [ div [ class "col-3" ]
                     [ select [ class "custom-select", onInput ChangeSelection ]
                         [ option [ selected True ] [ text "mode" ]
                         , option [ value "off" ] [ text "Off" ]
@@ -24,16 +24,12 @@ actionBar =
                         , option [ value "100" ] [ text "100 results per page" ]
                         ]
                     ]
-                , div [ class "col-4 px-0" ]
+                , div [ class "col-5" ]
                     [ input [ class "form-control", type_ "search", placeholder "Search", onInput RecordQuery ]
                         []
                     ]
-                , div [ class "col-5 px-0" ]
-                    [ div [ class "btn-group" ]
-                        [ button [ onClick FetchPosts, class "btn btn-outline-success" ] [ text "Search" ]
-                        , button [ onClick NextPosts, class "btn btn-outline-primary" ]
-                            [ text "Next" ]
-                        ]
+                , div [ class "col-4" ]
+                    [ button [ onClick FetchPosts, class "btn btn-outline-success" ] [ text "Search" ]
                     ]
                 ]
             ]

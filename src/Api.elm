@@ -1,4 +1,4 @@
-module Api exposing (fetchPosts, nextPosts, prevPosts)
+module Api exposing (fetchPosts)
 
 import Decode exposing (postsDecoder)
 import Http
@@ -6,18 +6,13 @@ import Models exposing (Model, Msg(..))
 
 
 host : String
-
-
-
 host =
     "https://redditcr.herokuapp.com"
 
 
+
 -- host =
 --     "http://localhost:6001"
-
-
-
 -- host =
 --     "http://192.168.0.107:6001"
 
@@ -54,27 +49,5 @@ fetchPosts model =
     let
         url =
             buildUrl model
-    in
-    request url
-
-
-nextPosts : Model -> Cmd Msg
-nextPosts model =
-    let
-        url =
-            buildUrl model
-    in
-    request url
-
-
-prevPosts : Model -> Cmd Msg
-prevPosts model =
-    let
-        url =
-            host
-                ++ "/reddit?query="
-                ++ String.trim model.query
-                ++ "&before="
-                ++ model.before
     in
     request url
