@@ -53,7 +53,7 @@ renderDetailPost ( sub, post, mode ) =
                 div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ] [ renderIframe post.mediaUrl ]
 
             else
-                div [] [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] [] ]
+                div [ class "card" ] [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] [] ]
     in
     div [] [ media ]
 
