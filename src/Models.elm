@@ -1,4 +1,4 @@
-module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), SearchHistory, SubReddit)
+module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), SubReddit)
 
 import Dict exposing (Dict)
 import Http
@@ -11,10 +11,6 @@ type Msg
     | RecordQuery String
     | OnLocationChange Location
     | ChangeSelection String
-
-
-type alias Flags =
-    String
 
 
 type PostHint
@@ -58,21 +54,21 @@ type alias PostList =
     List Post
 
 
-type alias SearchHistory =
-    List String
+type alias Flags =
+    { history : List ( String, String )
+    }
 
 
 type alias Model =
     { children : PostList
     , query : String
     , error : String
-    , after : Dict String String
+    , history : Dict String String
     , before : String
     , loading : Bool
     , limit : String
     , count : String
     , route : Route
-    , history : SearchHistory
     , mode : Mode
     }
 

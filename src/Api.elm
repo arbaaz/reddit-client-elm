@@ -39,7 +39,7 @@ buildUrl model =
         url =
             host ++ "/reddit?query=" ++ String.trim model.query ++ "&count=" ++ model.count
     in
-    case Dict.get model.query model.after of
+    case Dict.get model.query model.history of
         Just value ->
             url ++ "&after=" ++ value
 

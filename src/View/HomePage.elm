@@ -1,5 +1,6 @@
 module View.HomePage exposing (homePage)
 
+import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Models exposing (Model, Msg)
@@ -12,10 +13,7 @@ homePage model =
         [ h3 []
             [ text "Interesting Subreddits" ]
         , div []
-            (List.map
-                renderLinks
-                model.history
-            )
+            (List.map renderLinks (Dict.keys model.history))
         , actionBar
         ]
 

@@ -1,20 +1,19 @@
-port module Main exposing (init, initModel, main, setStorage, subscriptions, toJs, update, view)
+port module Main exposing (init, initModel, main, setStorage, subscriptions, toGoogleAnalytics, update, view)
 
 import Api exposing (fetchPosts)
 import Debug exposing (log)
 import Dict exposing (Dict)
 import Html exposing (..)
-import Models exposing (Flags, Model, Msg(..), Route(..), SearchHistory)
+import Models exposing (Flags, Model, Msg(..), Route(..))
 import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation, routeParser, router)
-import Set exposing (fromList, toList)
 import View.Post exposing (isGif)
 
 
-port setStorage : SearchHistory -> Cmd msg
+port setStorage : List ( String, String ) -> Cmd msg
 
 
-port toJs : String -> Cmd msg
+port toGoogleAnalytics : String -> Cmd msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -45,28 +44,27 @@ update msg model =
             ( newModel, cmd )
 
         Posts (Ok x) ->
-            ( { model
-                | children = filterData ( model.mode, x.children )
-                , after = Dict.insert model.query x.after model.after
-                , before = x.before
-                , loading = False
-                , error = ""
-              }
-            , Cmd.none
-            )
+            let
+                newModel =
+                    { model
+                        | children = filterData ( model.mode, x.children )
+                        , history = Dict.insert model.query x.after model.history
+                        , before = x.before
+                        , loading = False
+                        , error = ""
+                    }
+            in
+            ( newModel, Cmd.batch [ setStorage (Dict.toList newModel.history) ] )
 
         Posts (Err err) ->
             ( { model | loading = False, error = toString err }, Cmd.none )
 
         FetchPosts ->
             let
-                history_ =
-                    toList <| fromList <| model.query :: model.history
-
                 newModel =
-                    { model | loading = True, history = history_ }
+                    { model | loading = True }
             in
-            ( newModel, Cmd.batch [ fetchPosts newModel, toJs model.query, setStorage newModel.history ] )
+            ( newModel, Cmd.batch [ fetchPosts newModel, toGoogleAnalytics model.query ] )
 
         -- ( newModel, Cmd.none )
         RecordQuery query ->
@@ -116,18 +114,17 @@ subscriptions model =
     Sub.none
 
 
-initModel : Route -> Model
-initModel route =
+initModel : Route -> Flags -> Model
+initModel route flags =
     { children = []
     , query = routeParser route
     , error = ""
-    , after = Dict.empty
     , before = ""
     , loading = False
     , limit = "10"
     , count = "10"
     , route = route
-    , history = []
+    , history = Dict.fromList flags.history
     , mode = "on"
     }
 
@@ -139,9 +136,9 @@ init flags location =
             Routing.parseLocation location
 
         model =
-            initModel currentRoute
+            initModel currentRoute flags
     in
-    ( { model | history = String.split "_" flags }, Cmd.batch [ fetchPosts model, toJs model.query ] )
+    ( model, Cmd.batch [ fetchPosts model ] )
 
 
 main : Program Flags Model Msg
