@@ -48,7 +48,8 @@ update msg model =
                 newModel =
                     { model
                         | children = filterData ( model.mode, x.children )
-                        , history = Dict.insert model.query x.after model.history
+                        , history = Dict.insert x.subreddit x.after model.history
+                        , query = x.subreddit
                         , before = x.before
                         , loading = False
                         , error = ""

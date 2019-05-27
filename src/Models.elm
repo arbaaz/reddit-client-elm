@@ -77,4 +77,5 @@ type alias Response =
     { children : PostList
     , after : String
     , before : String
+    , subreddit : String
     }

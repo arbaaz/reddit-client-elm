@@ -23,5 +23,6 @@ postsDecoder =
     |> required "children" (JD.list postDecoder)
     |> optional "after"  string ""
     |> optional "before" string ""
+    |> optional "subreddit" string ""
     
 

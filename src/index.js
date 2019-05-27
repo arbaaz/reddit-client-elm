@@ -3,7 +3,9 @@ import { Main } from './Main.elm';
 import registerServiceWorker from './registerServiceWorker';
 
 const storedState = localStorage.getItem('search-history');
-const startingState = storedState ? JSON.parse(storedState) : ['tinder'];
+const startingState = storedState
+  ? JSON.parse(storedState)
+  : [['randnsfw', '']];
 
 const app = Main.embed(document.getElementById('root'), {
   history: startingState
