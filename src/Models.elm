@@ -1,5 +1,6 @@
 module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), SearchHistory, SubReddit)
 
+import Dict exposing (Dict)
 import Http
 import Navigation exposing (Location)
 
@@ -65,7 +66,7 @@ type alias Model =
     { children : PostList
     , query : String
     , error : String
-    , after : String
+    , after : Dict String String
     , before : String
     , loading : Bool
     , limit : String

@@ -2,7 +2,8 @@ module View.ActionBar exposing (actionBar)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (on, onClick, onInput)
+import Html.Events exposing (on, onClick, onInput, onWithOptions)
+import Json.Decode as JD
 import Models exposing (Msg(ChangeSelection, FetchPosts, RecordQuery))
 
 
@@ -29,7 +30,7 @@ actionBar =
                         []
                     ]
                 , div [ class "col-4" ]
-                    [ button [ onClick FetchPosts, class "btn btn-outline-success" ] [ text "Search" ]
+                    [ button [ onWithOptions "click" { stopPropagation = True, preventDefault = True } (JD.succeed FetchPosts), class "btn btn-outline-success" ] [ text "Search" ]
                     ]
                 ]
             ]

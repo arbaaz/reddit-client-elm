@@ -1,6 +1,7 @@
 module Api exposing (fetchPosts)
 
 import Decode exposing (postsDecoder)
+import Dict exposing (Dict)
 import Http
 import Models exposing (Model, Msg(..))
 
@@ -32,16 +33,18 @@ request url =
         )
 
 
+buildUrl : Model -> String
 buildUrl model =
     let
         url =
             host ++ "/reddit?query=" ++ String.trim model.query ++ "&count=" ++ model.count
     in
-    if model.after /= "" then
-        url ++ "&after=" ++ model.after
+    case Dict.get model.query model.after of
+        Just value ->
+            url ++ "&after=" ++ value
 
-    else
-        url
+        Nothing ->
+            url
 
 
 fetchPosts : Model -> Cmd Msg

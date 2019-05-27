@@ -2,6 +2,7 @@ port module Main exposing (init, initModel, main, setStorage, subscriptions, toJ
 
 import Api exposing (fetchPosts)
 import Debug exposing (log)
+import Dict exposing (Dict)
 import Html exposing (..)
 import Models exposing (Flags, Model, Msg(..), Route(..), SearchHistory)
 import Navigation exposing (Location, modifyUrl)
@@ -46,7 +47,7 @@ update msg model =
         Posts (Ok x) ->
             ( { model
                 | children = filterData ( model.mode, x.children )
-                , after = x.after
+                , after = Dict.insert model.query x.after model.after
                 , before = x.before
                 , loading = False
                 , error = ""
@@ -65,10 +66,11 @@ update msg model =
                 newModel =
                     { model | loading = True, history = history_ }
             in
-            ( newModel, Cmd.batch [ modifyUrl ("#r/" ++ model.query), toJs model.query, setStorage newModel.history ] )
+            ( newModel, Cmd.batch [ fetchPosts newModel, toJs model.query, setStorage newModel.history ] )
 
+        -- ( newModel, Cmd.none )
         RecordQuery query ->
-            ( { model | query = query, after = "", before = "" }, Cmd.none )
+            ( { model | query = query }, Cmd.none )
 
         ChangeSelection value ->
             let
@@ -119,7 +121,7 @@ initModel route =
     { children = []
     , query = routeParser route
     , error = ""
-    , after = ""
+    , after = Dict.empty
     , before = ""
     , loading = False
     , limit = "10"
