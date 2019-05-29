@@ -41,13 +41,19 @@ router model =
             in
             case postItem of
                 Just post ->
-                    renderDetailPost ( sub, post, model.mode )
+                    page model
 
+                -- renderDetailPost ( sub, post, model.mode )
                 Nothing ->
-                    notFoundView
+                    page model
 
+        -- notFoundView
         NotFoundRoute ->
-            homePage model
+            page model
+
+
+
+-- homePage model
 
 
 routeParser : Route -> String

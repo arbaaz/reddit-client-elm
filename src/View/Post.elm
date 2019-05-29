@@ -69,8 +69,12 @@ renderPost ( sub, post, mode ) =
                 div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ] [ renderIframe post.mediaUrl ]
 
             else
-                a [ href post_path ]
-                    [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
+                div []
+                    [ a [ href ("#" ++ post.id), class "wiggle" ]
+                        [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
+                        ]
+                    , div [ class "lightbox short-animate", id post.id ] [ img [ class "long-animate", src (getPreview post.source) ] [] ]
+                    , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href "#!" ] [] ]
                     ]
     in
     if hasPreview post then
