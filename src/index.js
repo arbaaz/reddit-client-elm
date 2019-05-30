@@ -3,12 +3,14 @@ import { Main } from './Main.elm';
 import registerServiceWorker from './registerServiceWorker';
 
 const storedState = localStorage.getItem('persistModel');
-const startingState = storedState ? JSON.parse(storedState) : [['tinder', '']];
+const initialState = storedState
+  ? JSON.parse(storedState)
+  : {
+      history: [['tinder', '']],
+      settings: { count: '10', gifMode: false }
+    };
 
-const app = Main.embed(document.getElementById('root'), {
-  history: startingState,
-  settings: { count: 10, gifMode: false }
-});
+const app = Main.embed(document.getElementById('root'), initialState);
 
 app.ports.toGoogleAnalytics.subscribe(function(str) {
   gtag('event', 'search', {
@@ -17,6 +19,7 @@ app.ports.toGoogleAnalytics.subscribe(function(str) {
 });
 
 app.ports.setStorage.subscribe(function(history) {
+  console.log('History', history);
   localStorage.setItem('persistModel', JSON.stringify(history));
 });
 

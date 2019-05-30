@@ -1,4 +1,4 @@
-module View.Post exposing (getPreview, hasPreview, isGif, postPath, redditPath, renderDetailPost, renderPost, renderPosts, split, urlDecode)
+module View.Post exposing (getPreview, hasPreview, isGif, postPath, redditPath, renderPost, renderPosts, split, urlDecode)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -45,40 +45,34 @@ redditPath pathName =
     "http://reddit.com/" ++ pathName
 
 
-renderDetailPost : ( SubReddit, Post, Mode ) -> Html msg
-renderDetailPost ( sub, post, mode ) =
-    let
-        media =
-            if isGif post then
-                div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ] [ renderIframe post.mediaUrl ]
-
-            else
-                div [ class "card" ] [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] [] ]
-    in
-    div [] [ media ]
-
-
-renderPost : ( SubReddit, Post, Mode ) -> Html msg
-renderPost ( sub, post, mode ) =
+renderPost : ( SubReddit, Post, Bool ) -> Html msg
+renderPost ( sub, post, gifMode ) =
     let
         post_path =
             postPath ( sub, post.id )
 
+        image_thumbnail =
+            div []
+                [ a [ href ("#lb/" ++ post.id), class "wiggle" ]
+                    [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
+                    ]
+                , div [ class "lightbox short-animate", id ("lb/" ++ post.id) ] [ img [ class "long-animate", src (getPreview post.source) ] [] ]
+                , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href ("#r/" ++ sub) ] [] ]
+                ]
+
         image_view =
-            if mode == "t10gif" then
-                div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ] [ renderIframe post.mediaUrl ]
+            if gifMode then
+                if isGif post then
+                    div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ] [ renderIframe post.mediaUrl ]
+
+                else
+                    image_thumbnail
 
             else
-                div []
-                    [ a [ href ("#lb/" ++ post.id), class "wiggle" ]
-                        [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
-                        ]
-                    , div [ class "lightbox short-animate", id ("lb/" ++ post.id) ] [ img [ class "long-animate", src (getPreview post.source) ] [] ]
-                    , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href ("#r/" ++ sub) ] [] ]
-                    ]
+                image_thumbnail
     in
     if hasPreview post then
-        if mode /= "off" then
+        if not gifMode then
             div [ class "row" ]
                 [ div [ class "col col-xs-12" ]
                     [ div
@@ -117,7 +111,7 @@ split i list =
             listHead :: split i (List.drop i list)
 
 
-renderPosts : ( SubReddit, PostList, Mode ) -> Html msg
-renderPosts ( sub, posts, mode ) =
+renderPosts : ( SubReddit, PostList, Bool ) -> Html msg
+renderPosts ( sub, posts, gifMode ) =
     div [ class "cards-container" ]
-        (List.map (\post -> renderPost ( sub, post, mode )) posts)
+        (List.map (\post -> renderPost ( sub, post, gifMode )) posts)

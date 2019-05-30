@@ -7,7 +7,8 @@ import UrlParser exposing (..)
 import View.HomePage exposing (homePage)
 import View.NotFound exposing (notFoundView)
 import View.Page exposing (page)
-import View.Post exposing (renderDetailPost, renderPost)
+import View.Post exposing (renderPost)
+import View.Preferences exposing (preferencesView)
 
 
 matchers : Parser (Route -> a) a
@@ -17,6 +18,7 @@ matchers =
         , map SubRedditRoute (s "r" </> string)
         , map Home (s "home")
         , map Lightbox (s "lb" </> string)
+        , map Preferences (s "preferences")
         ]
 
 
@@ -43,7 +45,7 @@ router model =
             in
             case postItem of
                 Just post ->
-                    renderDetailPost ( sub, post, model.mode )
+                    Html.div [] []
 
                 Nothing ->
                     Html.div [] []
@@ -57,6 +59,9 @@ router model =
         NotFoundRoute ->
             notFoundView
 
+        Preferences ->
+            preferencesView model
+
 
 routeParser : Route -> String
 routeParser route =
@@ -68,7 +73,7 @@ routeParser route =
 
                 SubRedditRoute sub ->
                     sub
-                
+
                 _ ->
                     ""
     in

@@ -37,7 +37,7 @@ buildUrl : Model -> String
 buildUrl model =
     let
         url =
-            host ++ "/reddit?query=" ++ String.trim model.query ++ "&count=" ++ model.count
+            host ++ "/reddit?query=" ++ String.trim model.query ++ "&count=" ++ model.settings.count
     in
     case Dict.get model.query model.history of
         Just value ->

@@ -5,13 +5,12 @@ import Debug exposing (log)
 import Dict exposing (Dict)
 import Html exposing (..)
 import Http
-import Models exposing (Flags, Model, Msg(..), Route(..))
+import Models exposing (Flags, Model, Msg(..), Route(..), setCount, toggleGif)
 import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation, routeParser, router)
-import View.Post exposing (isGif)
 
 
-port setStorage : List ( String, String ) -> Cmd msg
+port setStorage : Flags -> Cmd msg
 
 
 port toGoogleAnalytics : String -> Cmd msg
@@ -43,7 +42,7 @@ update msg model =
             let
                 newModel =
                     { model
-                        | children = filterData ( model.mode, x.children )
+                        | children = x.children
                         , history = Dict.insert x.subreddit x.after model.history
                         , query = x.subreddit
                         , before = x.before
@@ -51,7 +50,7 @@ update msg model =
                         , error = ""
                     }
             in
-            ( newModel, Cmd.batch [ modifyUrl ("#r/" ++ x.subreddit), setStorage (Dict.toList newModel.history) ] )
+            ( newModel, Cmd.batch [ modifyUrl ("#r/" ++ x.subreddit), setStorage { history = Dict.toList newModel.history, settings = newModel.settings } ] )
 
         Posts (Err err) ->
             case err of
@@ -79,44 +78,21 @@ update msg model =
             in
             ( newModel, fetchPosts newModel )
 
+        SavePreferences ->
+            ( model, Cmd.batch [ modifyUrl ("#r/" ++ model.query), setStorage { history = Dict.toList model.history, settings = model.settings } ] )
+
+        CountPerPage count ->
+            ( { model | settings = setCount count model.settings }, Cmd.none )
+
+        ToggleGifMode ->
+            ( { model | settings = toggleGif model.settings }, Cmd.none )
+
         DeleteHistory sub ->
             let
                 history =
                     Dict.remove sub model.history
             in
-            ( { model | history = history }, setStorage (Dict.toList history) )
-
-        ChangeSelection value ->
-            let
-                count =
-                    if value == "10" then
-                        value
-
-                    else if value == "100" then
-                        value
-
-                    else if value == "25" then
-                        value
-
-                    else
-                        model.count
-            in
-            ( { model | children = filterData ( value, model.children ), mode = value, count = count }, Cmd.none )
-
-
-filterData : ( String, List Models.Post ) -> List Models.Post
-filterData ( mode, children ) =
-    if mode == "gif" then
-        List.filter isGif children
-
-    else if mode == "t10" then
-        List.take 10 children
-
-    else if mode == "t10gif" then
-        List.take 10 (List.filter isGif children)
-
-    else
-        children
+            ( { model | history = history }, setStorage { history = Dict.toList history, settings = model.settings } )
 
 
 view : Model -> Html Msg
@@ -155,7 +131,7 @@ init flags location =
         model =
             initModel currentRoute flags
     in
-    ( model, Cmd.none )
+    ( model, fetchPosts model )
 
 
 main : Program Flags Model Msg

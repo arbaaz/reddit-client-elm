@@ -1,4 +1,4 @@
-module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), SubReddit)
+module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), Settings, SubReddit, setCount, toggleGif)
 
 import Dict exposing (Dict)
 import Http
@@ -10,9 +10,21 @@ type Msg
     | FetchPosts
     | RecordQuery String
     | OnLocationChange Location
-    | ChangeSelection String
     | DeleteHistory String
     | FetchRandNsfw
+    | SavePreferences
+    | ToggleGifMode
+    | CountPerPage String
+
+
+setCount : String -> Settings -> Settings
+setCount count settings =
+    { settings | count = count }
+
+
+toggleGif : Settings -> Settings
+toggleGif settings =
+    { settings | gifMode = not settings.gifMode }
 
 
 type PostHint
@@ -40,6 +52,7 @@ type Route
     | NotFoundRoute
     | Home
     | Lightbox PostId
+    | Preferences
 
 
 type alias SubReddit =
@@ -59,7 +72,7 @@ type alias PostList =
 
 
 type alias Settings =
-    { count : Int
+    { count : String
     , gifMode : Bool
     }
 
@@ -70,11 +83,13 @@ type alias Flags =
     }
 
 
+
 -- type alias History =
 --     { query : String
 --     , after : String
 --     , score : Int
 --     }
+
 
 type alias Model =
     { children : PostList
