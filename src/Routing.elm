@@ -15,6 +15,8 @@ matchers =
     oneOf
         [ map PostRoute (s "r" </> string </> string)
         , map SubRedditRoute (s "r" </> string)
+        , map Home (s "home")
+        , map Lightbox (s "lb" </> string)
         ]
 
 
@@ -25,7 +27,7 @@ parseLocation location =
             route
 
         Nothing ->
-            NotFoundRoute
+            Home
 
 
 router : Model -> Html Msg
@@ -41,19 +43,19 @@ router model =
             in
             case postItem of
                 Just post ->
-                    page model
+                    renderDetailPost ( sub, post, model.mode )
 
-                -- renderDetailPost ( sub, post, model.mode )
                 Nothing ->
-                    page model
+                    Html.div [] []
 
-        -- notFoundView
-        NotFoundRoute ->
+        Home ->
+            homePage model
+
+        Lightbox id ->
             page model
 
-
-
--- homePage model
+        NotFoundRoute ->
+            notFoundView
 
 
 routeParser : Route -> String
@@ -66,8 +68,8 @@ routeParser route =
 
                 SubRedditRoute sub ->
                     sub
-
-                NotFoundRoute ->
-                    "tinder"
+                
+                _ ->
+                    ""
     in
     query

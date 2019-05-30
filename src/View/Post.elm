@@ -70,11 +70,11 @@ renderPost ( sub, post, mode ) =
 
             else
                 div []
-                    [ a [ href ("#" ++ post.id), class "wiggle" ]
+                    [ a [ href ("#lb/" ++ post.id), class "wiggle" ]
                         [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
                         ]
-                    , div [ class "lightbox short-animate", id post.id ] [ img [ class "long-animate", src (getPreview post.source) ] [] ]
-                    , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href "#!" ] [] ]
+                    , div [ class "lightbox short-animate", id ("lb/" ++ post.id) ] [ img [ class "long-animate", src (getPreview post.source) ] [] ]
+                    , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href ("#r/" ++ sub) ] [] ]
                     ]
     in
     if hasPreview post then

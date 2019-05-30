@@ -23,7 +23,7 @@ page model =
             div [ class "form" ]
                 [ actionBar
                 , nav [ class "navbar navbar-dark bg-dark" ]
-                    [ a [ class "navbar-brand", href "#" ]
+                    [ a [ class "navbar-brand", href "#home" ]
                         [ text "Home"
                         ]
                     , div

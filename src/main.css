@@ -206,3 +206,8 @@ body {
     -webkit-transform: rotate(-2deg);
   }
 }
+
+.links ~ button {
+  position: absolute;
+  right: 10px;
+}

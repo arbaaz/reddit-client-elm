@@ -11,6 +11,7 @@ type Msg
     | RecordQuery String
     | OnLocationChange Location
     | ChangeSelection String
+    | DeleteHistory String
 
 
 type PostHint
@@ -36,6 +37,8 @@ type Route
     = PostRoute SubReddit PostId
     | SubRedditRoute SubReddit
     | NotFoundRoute
+    | Home
+    | Lightbox PostId
 
 
 type alias SubReddit =

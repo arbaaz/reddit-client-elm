@@ -26,22 +26,17 @@ update msg model =
 
                 query =
                     routeParser newRoute
-
-                newModel =
-                    { model | route = newRoute, query = query }
-
-                cmd =
-                    case newRoute of
-                        PostRoute sub id ->
-                            Cmd.none
-
-                        SubRedditRoute sub ->
-                            fetchPosts newModel
-
-                        NotFoundRoute ->
-                            Cmd.none
             in
-            ( newModel, cmd )
+            case ( model.route, newRoute ) of
+                ( Home, SubRedditRoute sub ) ->
+                    let
+                        newModel =
+                            { model | route = newRoute, query = query }
+                    in
+                    ( newModel, fetchPosts newModel )
+
+                _ ->
+                    ( { model | route = newRoute }, Cmd.none )
 
         Posts (Ok x) ->
             let
@@ -55,7 +50,7 @@ update msg model =
                         , error = ""
                     }
             in
-            ( newModel, Cmd.batch [ setStorage (Dict.toList newModel.history) ] )
+            ( newModel, Cmd.batch [ modifyUrl ("#r/" ++ x.subreddit), setStorage (Dict.toList newModel.history) ] )
 
         Posts (Err err) ->
             ( { model | loading = False, error = toString err }, Cmd.none )
@@ -70,6 +65,13 @@ update msg model =
         -- ( newModel, Cmd.none )
         RecordQuery query ->
             ( { model | query = query }, Cmd.none )
+
+        DeleteHistory sub ->
+            let
+                history =
+                    Dict.remove sub model.history
+            in
+            ( { model | history = history }, setStorage (Dict.toList history) )
 
         ChangeSelection value ->
             let
