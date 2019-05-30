@@ -4,6 +4,7 @@ import Api exposing (fetchPosts)
 import Debug exposing (log)
 import Dict exposing (Dict)
 import Html exposing (..)
+import Http
 import Models exposing (Flags, Model, Msg(..), Route(..))
 import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation, routeParser, router)
@@ -53,7 +54,12 @@ update msg model =
             ( newModel, Cmd.batch [ modifyUrl ("#r/" ++ x.subreddit), setStorage (Dict.toList newModel.history) ] )
 
         Posts (Err err) ->
-            ( { model | loading = False, error = toString err }, Cmd.none )
+            case err of
+                Http.BadStatus status ->
+                    ( { model | loading = False, error = toString status.status.message }, Cmd.none )
+
+                _ ->
+                    ( { model | loading = False, error = "Something went wrong" }, Cmd.none )
 
         FetchPosts ->
             let
@@ -65,6 +71,13 @@ update msg model =
         -- ( newModel, Cmd.none )
         RecordQuery query ->
             ( { model | query = query }, Cmd.none )
+
+        FetchRandNsfw ->
+            let
+                newModel =
+                    { model | query = "randnsfw", loading = True }
+            in
+            ( newModel, fetchPosts newModel )
 
         DeleteHistory sub ->
             let
@@ -129,6 +142,7 @@ initModel route flags =
     , route = route
     , history = Dict.fromList flags.history
     , mode = "on"
+    , settings = flags.settings
     }
 
 
@@ -141,7 +155,7 @@ init flags location =
         model =
             initModel currentRoute flags
     in
-    ( model, Cmd.batch [ fetchPosts model ] )
+    ( model, Cmd.none )
 
 
 main : Program Flags Model Msg

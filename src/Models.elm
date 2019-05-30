@@ -12,6 +12,7 @@ type Msg
     | OnLocationChange Location
     | ChangeSelection String
     | DeleteHistory String
+    | FetchRandNsfw
 
 
 type PostHint
@@ -57,10 +58,23 @@ type alias PostList =
     List Post
 
 
-type alias Flags =
-    { history : List ( String, String )
+type alias Settings =
+    { count : Int
+    , gifMode : Bool
     }
 
+
+type alias Flags =
+    { history : List ( String, String )
+    , settings : Settings
+    }
+
+
+-- type alias History =
+--     { query : String
+--     , after : String
+--     , score : Int
+--     }
 
 type alias Model =
     { children : PostList
@@ -73,6 +87,7 @@ type alias Model =
     , count : String
     , route : Route
     , mode : Mode
+    , settings : Settings
     }
 
 
