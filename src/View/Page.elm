@@ -16,9 +16,6 @@ page model =
         query =
             model.query
 
-        gifMode =
-            model.settings.gifMode
-
         inner =
             div [ class "form" ]
                 [ actionBar
@@ -33,7 +30,7 @@ page model =
                         []
                         [ text query ]
                     ]
-                , renderPosts ( query, posts, gifMode )
+                , renderPosts ( query, posts, model.settings )
                 ]
     in
     div

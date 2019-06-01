@@ -1,4 +1,4 @@
-module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), Settings, SubReddit, setCount, toggleGif)
+module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), Settings, SubReddit, setCount, toggleGif, toggleImageMode)
 
 import Dict exposing (Dict)
 import Http
@@ -14,6 +14,7 @@ type Msg
     | FetchRandNsfw
     | SavePreferences
     | ToggleGifMode
+    | ToggleImageMode
     | CountPerPage String
 
 
@@ -25,6 +26,10 @@ setCount count settings =
 toggleGif : Settings -> Settings
 toggleGif settings =
     { settings | gifMode = not settings.gifMode }
+
+
+toggleImageMode settings =
+    { settings | imageMode = not settings.imageMode }
 
 
 type PostHint
@@ -51,7 +56,6 @@ type Route
     | SubRedditRoute SubReddit
     | NotFoundRoute
     | Home
-    | Lightbox PostId
     | Preferences
 
 
@@ -74,6 +78,7 @@ type alias PostList =
 type alias Settings =
     { count : String
     , gifMode : Bool
+    , imageMode : Bool
     }
 
 

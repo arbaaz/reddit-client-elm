@@ -5,7 +5,7 @@ import Debug exposing (log)
 import Dict exposing (Dict)
 import Html exposing (..)
 import Http
-import Models exposing (Flags, Model, Msg(..), Route(..), setCount, toggleGif)
+import Models exposing (Flags, Model, Msg(..), Route(..), setCount, toggleGif, toggleImageMode)
 import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation, routeParser, router)
 
@@ -86,6 +86,9 @@ update msg model =
 
         ToggleGifMode ->
             ( { model | settings = toggleGif model.settings }, Cmd.none )
+
+        ToggleImageMode ->
+            ( { model | settings = toggleImageMode model.settings }, Cmd.none )
 
         DeleteHistory sub ->
             let

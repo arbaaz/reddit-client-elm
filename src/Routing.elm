@@ -1,5 +1,7 @@
 module Routing exposing (matchers, parseLocation, routeParser, router)
 
+-- import View.Post exposing (renderPost)
+
 import Html exposing (Html)
 import Models exposing (Model, Msg(..), Route(..))
 import Navigation exposing (Location)
@@ -7,7 +9,6 @@ import UrlParser exposing (..)
 import View.HomePage exposing (homePage)
 import View.NotFound exposing (notFoundView)
 import View.Page exposing (page)
-import View.Post exposing (renderPost)
 import View.Preferences exposing (preferencesView)
 
 
@@ -17,7 +18,6 @@ matchers =
         [ map PostRoute (s "r" </> string </> string)
         , map SubRedditRoute (s "r" </> string)
         , map Home (s "home")
-        , map Lightbox (s "lb" </> string)
         , map Preferences (s "preferences")
         ]
 
@@ -39,22 +39,10 @@ router model =
             page model
 
         PostRoute sub id ->
-            let
-                postItem =
-                    List.head (List.filter (\m -> m.id == id) model.children)
-            in
-            case postItem of
-                Just post ->
-                    Html.div [] []
-
-                Nothing ->
-                    Html.div [] []
+            page model
 
         Home ->
             homePage model
-
-        Lightbox id ->
-            page model
 
         NotFoundRoute ->
             notFoundView
@@ -65,16 +53,12 @@ router model =
 
 routeParser : Route -> String
 routeParser route =
-    let
-        query =
-            case route of
-                PostRoute sub id ->
-                    sub
+    case route of
+        PostRoute sub id ->
+            sub
 
-                SubRedditRoute sub ->
-                    sub
+        SubRedditRoute sub ->
+            sub
 
-                _ ->
-                    ""
-    in
-    query
+        _ ->
+            "tinder"

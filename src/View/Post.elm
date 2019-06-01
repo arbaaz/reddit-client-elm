@@ -2,7 +2,7 @@ module View.Post exposing (getPreview, hasPreview, isGif, postPath, redditPath, 
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Models exposing (Mode, Post, PostHint(..), PostId, PostList, SubReddit)
+import Models exposing (Mode, Post, PostHint(..), PostId, PostList, Settings, SubReddit)
 import View.Iframe exposing (renderIframe)
 
 
@@ -27,7 +27,7 @@ hasPreview post =
 
 postPath : ( SubReddit, PostId ) -> String
 postPath ( sub, id ) =
-    "#r/" ++ sub ++ "/" ++ id
+    "r/" ++ sub ++ "/" ++ id
 
 
 isGif : Post -> Bool
@@ -45,23 +45,23 @@ redditPath pathName =
     "http://reddit.com/" ++ pathName
 
 
-renderPost : ( SubReddit, Post, Bool ) -> Html msg
-renderPost ( sub, post, gifMode ) =
+renderPost : ( SubReddit, Post, Settings ) -> Html msg
+renderPost ( sub, post, settings ) =
     let
         post_path =
             postPath ( sub, post.id )
 
         image_thumbnail =
             div []
-                [ a [ href ("#lb/" ++ post.id), class "wiggle" ]
+                [ a [ href ("#" ++ post_path), class "wiggle" ]
                     [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
                     ]
-                , div [ class "lightbox short-animate", id ("lb/" ++ post.id) ] [ img [ class "long-animate", src (getPreview post.source) ] [] ]
+                , div [ class "lightbox short-animate", id post_path ] [ img [ class "long-animate", src (getPreview post.source) ] [] ]
                 , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href ("#r/" ++ sub) ] [] ]
                 ]
 
         image_view =
-            if gifMode then
+            if settings.gifMode then
                 if isGif post then
                     div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ] [ renderIframe post.mediaUrl ]
 
@@ -72,7 +72,7 @@ renderPost ( sub, post, gifMode ) =
                 image_thumbnail
     in
     if hasPreview post then
-        if not gifMode then
+        if settings.imageMode then
             div [ class "row" ]
                 [ div [ class "col col-xs-12" ]
                     [ div
@@ -88,7 +88,7 @@ renderPost ( sub, post, gifMode ) =
             div [ class "col col-xs-12" ]
                 [ div
                     [ class "card" ]
-                    [ a [ href (postPath ( sub, post.id )) ]
+                    [ a [ href ("#" ++ post_path) ]
                         [ text post.title ]
                     , div [ class "post-hint" ]
                         [ text (toString post.postHint) ]
@@ -111,7 +111,7 @@ split i list =
             listHead :: split i (List.drop i list)
 
 
-renderPosts : ( SubReddit, PostList, Bool ) -> Html msg
-renderPosts ( sub, posts, gifMode ) =
+renderPosts : ( SubReddit, PostList, Settings ) -> Html msg
+renderPosts ( sub, posts, settings ) =
     div [ class "cards-container" ]
-        (List.map (\post -> renderPost ( sub, post, gifMode )) posts)
+        (List.map (\post -> renderPost ( sub, post, settings )) posts)
