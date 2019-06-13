@@ -63,7 +63,13 @@ renderPost ( sub, post, settings ) =
         image_view =
             if settings.gifMode then
                 if isGif post then
-                    div [ ] [ renderIframe post.mediaUrl ]
+                div [][
+                    a [ href ("#" ++ post_path), class "wiggle" ]
+                    [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
+                    ]
+                , div [ class "lightbox short-animate", id post_path ] [ renderIframe post.mediaUrl]
+                , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href ("#r/" ++ sub) ] [] ]
+                ]
 
                 else
                     image_thumbnail
