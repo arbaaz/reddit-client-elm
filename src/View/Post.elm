@@ -63,7 +63,7 @@ renderPost ( sub, post, settings ) =
         image_view =
             if settings.gifMode then
                 if isGif post then
-                    div [ style [ ( "position", "relative" ), ( "paddingBottom", "75%" ) ] ] [ renderIframe post.mediaUrl ]
+                    div [ ] [ renderIframe post.mediaUrl ]
 
                 else
                     image_thumbnail

@@ -268,3 +268,8 @@ input:-moz-placeholder {
 input::-webkit-input-placeholder {
   color: transparent;
 }
+
+.embedly-embed {
+  width: inherit;
+  height: inherit;
+}
