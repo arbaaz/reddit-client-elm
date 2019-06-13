@@ -61,13 +61,16 @@ renderPost ( sub, post, settings ) =
                 ]
 
         image_view =
-            if settings.gifMode then
+            let mediaObject =  if settings.gifMode then
+                renderIframe post.mediaUrl
+            else
+                img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
+            in
                 if isGif post then
                 div [][
                     a [ href ("#" ++ post_path), class "wiggle" ]
                     [ 
-                        -- img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
-                        renderIframe post.mediaUrl
+                       mediaObject
                     ]
                 , div [ class "lightbox short-animate", id post_path ] [ renderIframe post.mediaUrl]
                 , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href ("#r/" ++ sub) ] [] ]
@@ -76,8 +79,6 @@ renderPost ( sub, post, settings ) =
                 else
                     image_thumbnail
 
-            else
-                image_thumbnail
     in
     if hasPreview post then
         if settings.imageMode then
