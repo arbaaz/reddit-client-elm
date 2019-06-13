@@ -18,8 +18,8 @@ page model =
 
         inner =
             div [ class "form" ]
-                [ actionBar
-                , nav [ class "navbar navbar-dark bg-dark" ]
+                [ 
+                nav [ class "navbar navbar-dark bg-dark fixed-top" ]
                     [ a [ class "navbar-brand", href "#home" ]
                         [ text "Home"
                         ]
@@ -31,6 +31,7 @@ page model =
                         [ text query ]
                     ]
                 , renderPosts ( query, posts, model.settings )
+                , actionBar
                 ]
     in
     div

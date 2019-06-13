@@ -12,10 +12,6 @@ body {
   margin: 0 auto;
 }
 
-.postList {
-  margin-bottom: 60px;
-}
-
 .loader {
   border: 16px solid #f3f3f3; /* Light grey */
   border-top: 16px solid #3498db; /* Blue */
@@ -41,11 +37,7 @@ body {
 }
 
 .card {
-  max-width: 400px;
-  margin-bottom: 15px;
   background: #191818;
-  /* object-fit: cover;
-  width: 100%; */
 }
 
 .card > .post-hint {
@@ -59,10 +51,11 @@ body {
 }
 
 .cards-container {
-  margin-bottom: 40px;
+  margin-top: 60px;
+  margin-bottom: 50px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-gap: 0;
+  grid-gap: 5px;
 }
 
 .short-animate {
@@ -88,7 +81,7 @@ body {
   left: 0;
   right: 0;
   background: rgba(52, 58, 64, 0.8);
-  z-index: 501;
+  z-index: 1031;
   opacity: 0;
 }
 
@@ -109,7 +102,7 @@ body {
   width: 70px;
   top: -70px;
   right: 0;
-  z-index: 502;
+  z-index: 1032;
   background: rgba(0, 0, 0, 0.1);
 }
 
@@ -210,4 +203,68 @@ body {
 .links ~ button {
   position: absolute;
   right: 10px;
+}
+
+/* Search */
+input {
+  outline: none;
+}
+
+input[type='search'] {
+  -webkit-appearance: textfield;
+  -webkit-box-sizing: content-box;
+  font-family: inherit;
+  font-size: 100%;
+}
+input::-webkit-search-decoration,
+input::-webkit-search-cancel-button {
+  display: none;
+}
+
+input[type='search'] {
+  width: 15px;
+  height: 15px;
+
+  color: transparent;
+  cursor: pointer;
+
+  background: #ededed
+    url(https://static.tumblr.com/ftv85bp/MIXmud4tx/search-icon.png) no-repeat
+    9px center;
+  border: solid 1px #ccc;
+  padding: 9px 10px 9px 32px;
+  padding-left: 10px;
+
+  -webkit-border-radius: 10em;
+  -moz-border-radius: 10em;
+  border-radius: 10em;
+
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+input[type='search']:hover {
+  background-color: #fff;
+}
+
+input[type='search']:focus {
+  width: 130px;
+  background-color: #fff;
+  border-color: #66cc75;
+  padding-left: 32px;
+  color: #000;
+  cursor: auto;
+
+  -webkit-box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
+  -moz-box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
+  box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
+}
+
+input:-moz-placeholder {
+  color: transparent;
+}
+
+input::-webkit-input-placeholder {
+  color: transparent;
 }

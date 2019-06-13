@@ -16,17 +16,10 @@ actionBar : Html Msg
 actionBar =
     nav [ class "navbar navbar-dark fixed-bottom bg-dark p-1" ]
         [ Html.form [ class "form-inline" ]
-            [ div [ class "form-row" ]
-                [ div [ class "col-3" ]
-                    [ button [ onWithOptions "click" config (JD.succeed FetchRandNsfw), class "btn btn-outline-success" ] [ text "Randnsfw" ]
-                    ]
-                , div [ class "col-5" ]
-                    [ input [ class "form-control", type_ "search", placeholder "Search", onInput RecordQuery ]
-                        []
-                    ]
-                , div [ class "col-4" ]
-                    [ button [ onWithOptions "click" config (JD.succeed FetchPosts), class "btn btn-outline-success" ] [ text "Search" ]
-                    ]
-                ]
+            [ 
+                button [ onWithOptions "click" config (JD.succeed FetchRandNsfw), class "btn btn-outline-success mr-2" ] [ text "Randnsfw" ]
+                , input [ class "mr-2", type_ "search", placeholder "Search", onInput RecordQuery ][]
+                , button [ onWithOptions "click" config (JD.succeed FetchPosts), class "btn btn-outline-success" ] [ text "Search" ]
+                
             ]
         ]

@@ -113,5 +113,5 @@ split i list =
 
 renderPosts : ( SubReddit, PostList, Settings ) -> Html msg
 renderPosts ( sub, posts, settings ) =
-    div [ class "cards-container" ]
+    div [ class "container-fluid cards-container" ]
         (List.map (\post -> renderPost ( sub, post, settings )) posts)
