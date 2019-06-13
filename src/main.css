@@ -54,7 +54,7 @@ body {
   margin-top: 60px;
   margin-bottom: 50px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   grid-gap: 5px;
 }
 
@@ -269,6 +269,13 @@ input::-webkit-input-placeholder {
   color: transparent;
 }
 
-.embedly-embed {
-  width: inherit;
+.gif {
+  width: 100%;
+  height: auto;
+  min-height: 300px;
+}
+
+.lightbox:target > .gif {
+  width: 100%;
+  height: 50vw;
 }

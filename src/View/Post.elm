@@ -65,7 +65,9 @@ renderPost ( sub, post, settings ) =
                 if isGif post then
                 div [][
                     a [ href ("#" ++ post_path), class "wiggle" ]
-                    [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
+                    [ 
+                        -- img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
+                        renderIframe post.mediaUrl
                     ]
                 , div [ class "lightbox short-animate", id post_path ] [ renderIframe post.mediaUrl]
                 , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href ("#r/" ++ sub) ] [] ]
