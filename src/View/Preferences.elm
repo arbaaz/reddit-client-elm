@@ -7,19 +7,22 @@ import Models exposing (Model, Msg(CountPerPage, SavePreferences, ToggleGifMode,
 
 
 preferencesView : Model -> Html Msg
-preferencesView model =
+preferencesView { settings } =
     div []
         [ div [ class "form-group" ]
             [ label [ class "form-check-label" ] [ text "Results per page" ]
-            , input [ onInput CountPerPage, value model.settings.count, class "form-control", type_ "number", HA.maxlength 2 ] []
+            , input [ onInput CountPerPage, value settings.count, class "form-control", type_ "number", HA.maxlength 2 ] []
             ]
-        , div [ class "form-check" ]
-            [ input [ onClick ToggleGifMode, checked model.settings.gifMode, class "form-check-input", type_ "checkbox", id "toggleGifMode" ] []
-            , label [ class "form-check-label", for "toggleGifMode" ] [ text "Gif mode" ]
-            ]
-        , div [ class "form-check" ]
-            [ input [ onClick ToggleImageMode, checked model.settings.imageMode, class "form-check-input", type_ "checkbox", id "toggleImageMode" ] []
-            , label [ class "form-check-label", for "toggleImageMode" ] [ text "Image mode" ]
-            ]
+        , renderCheckBox settings.gifMode ToggleGifMode "toggleGifMode" "Only Gifs"
+        , renderCheckBox settings.imageMode ToggleImageMode "toggleImageMode" "Image mode"
+        , renderCheckBox settings.autoPlayGif ToggleImageMode "toggleAutoPlayGifs" "Auto play gifs"
+        , renderCheckBox settings.adultMode ToggleImageMode "toggleAdultMode" "18+"
         , button [ onClick SavePreferences, class "btn btn-outline-success" ] [ text "Save" ]
+        ]
+
+
+renderCheckBox value clickHandler inputTagId labelText =
+    div [ class "form-check" ]
+        [ input [ onClick clickHandler, checked value, class "form-check-input", type_ "checkbox", id inputTagId ] []
+        , label [ class "form-check-label", for inputTagId ] [ text labelText ]
         ]

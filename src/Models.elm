@@ -47,7 +47,7 @@ type alias Post =
     , ups : Int
     , postHint : String
     , source : String
-    , mediaUrl : String
+    , iframe : String
     , url : String
     }
 
@@ -80,6 +80,8 @@ type alias Settings =
     { count : String
     , gifMode : Bool
     , imageMode : Bool
+    , autoPlayGif : Bool
+    , adultMode : Bool
     }
 
 

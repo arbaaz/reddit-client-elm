@@ -1,4 +1,4 @@
-module View.Post exposing (hasPreview, isGif, postPath, redditPath, renderPost, renderPosts, split, urlDecode)
+module View.Post exposing (buildRoutePath, hasPreview, isGif, redditPath, renderPost, renderPosts, urlDecode)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -20,8 +20,8 @@ hasPreview post =
         True
 
 
-postPath : ( SubReddit, PostId ) -> String
-postPath ( sub, id ) =
+buildRoutePath : ( SubReddit, PostId ) -> String
+buildRoutePath ( sub, id ) =
     "r/" ++ sub ++ "/" ++ id
 
 
@@ -44,40 +44,10 @@ renderPost : ( SubReddit, Post, Settings ) -> Html msg
 renderPost ( sub, post, settings ) =
     let
         post_path =
-            postPath ( sub, post.id )
+            buildRoutePath ( sub, post.id )
 
-        lightbox_path = case post.postHint of
-            "link" ->
-                post.url
-            _ ->
-            "#" ++ post_path
-        image_thumbnail =
-            div []
-                [ a [ href (lightbox_path), class "wiggle", target "_blank" ]
-                    [ img [ class "img-fluid card-img-top", src (urlDecode post.source) ] []
-                    ]
-                , div [ class "lightbox short-animate", id post_path ] [ img [ class "long-animate", src (post.url) ] [] ]
-                , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href ("#r/" ++ sub) ] [] ]
-                ]
-
-        
         image_view =
-            let mediaObject =  if settings.gifMode then
-                renderIframe post.mediaUrl
-            else
-                img [ class "img-fluid card-img-top", src (urlDecode post.source) ] []
-            in
-                if isGif post then
-                div [][
-                    a [ href (lightbox_path), class "wiggle" ]
-                    [ mediaObject]
-                , div [ class "lightbox short-animate", id post_path ] [ renderIframe post.mediaUrl]
-                , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href ("#r/" ++ sub) ] [] ]
-                ]
-
-                else
-                    image_thumbnail
-
+            renderMedia ( sub, post, settings )
     in
     if hasPreview post then
         if settings.imageMode then
@@ -109,17 +79,59 @@ renderPost ( sub, post, settings ) =
         div [] []
 
 
-split : Int -> List a -> List (List a)
-split i list =
-    case List.take i list of
-        [] ->
-            []
+renderMedia : ( SubReddit, Post, Settings ) -> Html msg
+renderMedia ( sub, post, settings ) =
+    let
+        post_path =
+            buildRoutePath ( sub, post.id )
 
-        listHead ->
-            listHead :: split i (List.drop i list)
+        ( thumbnail, original_content ) =
+            let
+                image_thumbnail =
+                    img [ class "img-fluid card-img-top", src (urlDecode post.source) ] []
+
+                render_iframe =
+                    renderIframe post.iframe
+            in
+            if isGif post then
+                if settings.gifMode then
+                    ( render_iframe, render_iframe )
+
+                else
+                    ( image_thumbnail, render_iframe )
+
+            else
+                ( image_thumbnail, image_thumbnail )
+
+        anchor_attr =
+            case post.postHint of
+                "link" ->
+                    [ class "wiggle", href post.url, target "_blank" ]
+
+                _ ->
+                    [ class "wiggle", href ("#" ++ post_path) ]
+    in
+    div []
+        [ a anchor_attr [ thumbnail ]
+        , div [ class "lightbox short-animate", id post_path ] [ original_content ]
+        , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href ("#r/" ++ sub) ] [] ]
+        ]
 
 
 renderPosts : ( SubReddit, PostList, Settings ) -> Html msg
 renderPosts ( sub, posts, settings ) =
-    div [ class "container-fluid cards-container" ]
-        (List.map (\post -> renderPost ( sub, post, settings )) posts)
+    let
+        children =
+            List.map (\post -> renderPost ( sub, post, settings )) posts
+    in
+    div [ class "container-fluid cards-container" ] children
+
+
+
+-- split : Int -> List a -> List (List a)
+-- split i list =
+--     case List.take i list of
+--         [] ->
+--             []
+--         listHead ->
+--             listHead :: split i (List.drop i list)

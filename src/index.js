@@ -7,7 +7,13 @@ const initialState = storedState
   ? JSON.parse(storedState)
   : {
       history: [['tinder', '']],
-      settings: { count: '10', gifMode: false, imageMode: true }
+      settings: {
+        count: '10',
+        gifMode: false,
+        imageMode: true,
+        autoPlayGif: false,
+        adultMode: false
+      }
     };
 
 const app = Main.embed(document.getElementById('root'), initialState);
