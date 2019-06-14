@@ -101,7 +101,7 @@ body {
   height: 70px;
   width: 70px;
   top: -70px;
-  right: 0;
+  left: 0;
   z-index: 1032;
   background: rgba(0, 0, 0, 0.1);
 }

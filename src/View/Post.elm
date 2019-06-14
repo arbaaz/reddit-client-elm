@@ -1,4 +1,4 @@
-module View.Post exposing (getPreview, hasPreview, isGif, postPath, redditPath, renderPost, renderPosts, split, urlDecode)
+module View.Post exposing (hasPreview, isGif, postPath, redditPath, renderPost, renderPosts, split, urlDecode)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -11,14 +11,9 @@ urlDecode =
     String.split "&amp;" >> String.join "&"
 
 
-getPreview : String -> String
-getPreview =
-    urlDecode
-
-
 hasPreview : Post -> Bool
 hasPreview post =
-    if getPreview post.source == "" then
+    if urlDecode post.source == "" then
         False
 
     else
@@ -51,27 +46,31 @@ renderPost ( sub, post, settings ) =
         post_path =
             postPath ( sub, post.id )
 
+        lightbox_path = case post.postHint of
+            "link" ->
+                post.url
+            _ ->
+            "#" ++ post_path
         image_thumbnail =
             div []
-                [ a [ href ("#" ++ post_path), class "wiggle" ]
-                    [ img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
+                [ a [ href (lightbox_path), class "wiggle", target "_blank" ]
+                    [ img [ class "img-fluid card-img-top", src (urlDecode post.source) ] []
                     ]
-                , div [ class "lightbox short-animate", id post_path ] [ img [ class "long-animate", src (getPreview post.source) ] [] ]
+                , div [ class "lightbox short-animate", id post_path ] [ img [ class "long-animate", src (post.url) ] [] ]
                 , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href ("#r/" ++ sub) ] [] ]
                 ]
 
+        
         image_view =
             let mediaObject =  if settings.gifMode then
                 renderIframe post.mediaUrl
             else
-                img [ class "img-fluid card-img-top", src (getPreview post.source) ] []
+                img [ class "img-fluid card-img-top", src (urlDecode post.source) ] []
             in
                 if isGif post then
                 div [][
-                    a [ href ("#" ++ post_path), class "wiggle" ]
-                    [ 
-                       mediaObject
-                    ]
+                    a [ href (lightbox_path), class "wiggle" ]
+                    [ mediaObject]
                 , div [ class "lightbox short-animate", id post_path ] [ renderIframe post.mediaUrl]
                 , div [ id "lightbox-controls", class "short-animate" ] [ a [ id "close-lightbox", class "long-animate", href ("#r/" ++ sub) ] [] ]
                 ]

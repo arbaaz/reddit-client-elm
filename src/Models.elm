@@ -48,6 +48,7 @@ type alias Post =
     , postHint : String
     , source : String
     , mediaUrl : String
+    , url : String
     }
 
 

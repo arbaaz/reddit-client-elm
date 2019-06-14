@@ -15,6 +15,7 @@ postDecoder =
         |> optional "post_hint" string "none"
         |> optional "preview" string ""
         |> optional "media_embed" string ""
+        |> optional "url" string ""
 
 
 postsDecoder : Decoder Response
