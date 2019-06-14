@@ -2,9 +2,11 @@ port module Main exposing (init, initModel, main, setStorage, subscriptions, toG
 
 import Api exposing (fetchPosts)
 import Debug exposing (log)
+import Decode exposing (flagsDecoder)
 import Dict exposing (Dict)
 import Html exposing (..)
 import Http
+import Json.Decode as Decode exposing (Decoder)
 import Models exposing (Flags, Model, Msg(..), Route(..), setCount, toggleGif, toggleImageMode, toggleSettings)
 import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation, routeParser, router)
@@ -128,9 +130,17 @@ initModel route flags =
     }
 
 
-init : Flags -> Location -> ( Model, Cmd Msg )
-init flags location =
+init : Decode.Value -> Location -> ( Model, Cmd Msg )
+init initFlags location =
     let
+        flags =
+            case Decode.decodeValue flagsDecoder initFlags of
+                Err _ ->
+                    Debug.crash "gracefully handle complete failure"
+
+                Ok model ->
+                    log "flags" model
+
         currentRoute =
             Routing.parseLocation location
 
@@ -140,7 +150,7 @@ init flags location =
     ( model, fetchPosts model )
 
 
-main : Program Flags Model Msg
+main : Program Decode.Value Model Msg
 main =
     Navigation.programWithFlags OnLocationChange
         { init = init

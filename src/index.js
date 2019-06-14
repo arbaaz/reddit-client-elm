@@ -6,7 +6,7 @@ const storedState = localStorage.getItem('persistModel');
 const initialState = storedState
   ? JSON.parse(storedState)
   : {
-      history: [['tinder', '']],
+      history: { tinder: '' },
       settings: {
         count: '10',
         gifMode: false,

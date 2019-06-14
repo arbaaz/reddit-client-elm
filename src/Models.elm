@@ -1,4 +1,4 @@
-module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), Settings, SubReddit, setCount, toggleGif, toggleImageMode, toggleSettings)
+module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), SearchHistory, Settings, SubReddit, setCount, toggleGif, toggleImageMode, toggleSettings)
 
 import Dict exposing (Dict)
 import Http
@@ -92,8 +92,12 @@ type alias Settings =
     }
 
 
+type alias SearchHistory =
+    List ( String, String )
+
+
 type alias Flags =
-    { history : List ( String, String )
+    { history : SearchHistory
     , settings : Settings
     }
 
