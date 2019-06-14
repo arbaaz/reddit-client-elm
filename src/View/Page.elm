@@ -18,8 +18,7 @@ page model =
 
         inner =
             div [ class "form" ]
-                [ 
-                nav [ class "navbar navbar-dark bg-dark fixed-top" ]
+                [ nav [ class "navbar navbar-dark bg-dark fixed-top" ]
                     [ a [ class "navbar-brand", href "#home" ]
                         [ text "Home"
                         ]
@@ -38,11 +37,14 @@ page model =
         [ id "outer" ]
         [ if model.loading then
             div [ class "loader" ] []
-
-          else
+        else
             inner
         , div [] [ text model.error ]
         ]
+
+
+
+-- renderLightBox =
 
 
 filterData : ( Models.Settings, List Models.Post ) -> List Models.Post

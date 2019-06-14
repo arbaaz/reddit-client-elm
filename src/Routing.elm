@@ -9,6 +9,7 @@ import UrlParser exposing (..)
 import View.HomePage exposing (homePage)
 import View.NotFound exposing (notFoundView)
 import View.Page exposing (page)
+import View.Post exposing (renderMedia)
 import View.Preferences exposing (preferencesView)
 
 
@@ -40,7 +41,17 @@ router model =
 
         PostRoute sub id ->
             page model
+            -- let
+            --     post =
+            --         List.head <| List.filter (\x -> x.id == id) model.children
+            -- in
+            -- case post of
+            --     Just val ->
+            --         renderMedia ( sub, val, model.settings )
 
+            --     Nothing ->
+            --         page model
+                
         Home ->
             homePage model
 

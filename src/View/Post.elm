@@ -1,4 +1,4 @@
-module View.Post exposing (buildRoutePath, hasPreview, isGif, redditPath, renderPost, renderPosts, urlDecode)
+module View.Post exposing (buildRoutePath, hasPreview, isGif, redditPath, renderMedia, renderPost, renderPosts, urlDecode)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -76,7 +76,8 @@ renderPost ( sub, post, settings ) =
                 ]
 
     else
-        div [] []
+        div []
+            [ a [ href post.url, target "_blank" ] [ text post.title ] ]
 
 
 renderMedia : ( SubReddit, Post, Settings ) -> Html msg
@@ -125,13 +126,3 @@ renderPosts ( sub, posts, settings ) =
             List.map (\post -> renderPost ( sub, post, settings )) posts
     in
     div [ class "container-fluid cards-container" ] children
-
-
-
--- split : Int -> List a -> List (List a)
--- split i list =
---     case List.take i list of
---         [] ->
---             []
---         listHead ->
---             listHead :: split i (List.drop i list)
