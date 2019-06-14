@@ -1,4 +1,4 @@
-module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), SearchHistory, Settings, SubReddit, setCount, toggleGif, toggleImageMode, toggleSettings)
+module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), SearchHistory, Settings, SubReddit, setCount, toggleAdultMode, toggleAutoPlayMode, toggleGif, toggleImageMode, toggleSettings)
 
 import Dict exposing (Dict)
 import Http
@@ -15,6 +15,8 @@ type Msg
     | SavePreferences
     | ToggleGifMode
     | ToggleImageMode
+    | ToggleAutoPlayMode
+    | ToggleAdultMode
     | ToggleSettings String
     | CountPerPage String
 
@@ -32,6 +34,16 @@ toggleGif settings =
 toggleImageMode : Settings -> Settings
 toggleImageMode settings =
     { settings | imageMode = not settings.imageMode }
+
+
+toggleAdultMode : Settings -> Settings
+toggleAdultMode settings =
+    { settings | adultMode = not settings.adultMode }
+
+
+toggleAutoPlayMode : Settings -> Settings
+toggleAutoPlayMode settings =
+    { settings | autoPlayGif = not settings.autoPlayGif }
 
 
 toggleSettings : String -> Settings -> Settings
@@ -100,7 +112,6 @@ type alias Flags =
     { history : SearchHistory
     , settings : Settings
     }
-
 
 
 type alias Model =

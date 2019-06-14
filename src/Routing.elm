@@ -9,7 +9,7 @@ import UrlParser exposing (..)
 import View.HomePage exposing (homePage)
 import View.NotFound exposing (notFoundView)
 import View.Page exposing (page)
-import View.Post exposing (renderMedia)
+-- import View.Post exposing (renderMedia)
 import View.Preferences exposing (preferencesView)
 
 

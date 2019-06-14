@@ -3,7 +3,7 @@ module View.Preferences exposing (preferencesView)
 import Html exposing (..)
 import Html.Attributes as HA exposing (..)
 import Html.Events exposing (on, onClick, onInput, onWithOptions)
-import Models exposing (Model, Msg(CountPerPage, SavePreferences, ToggleGifMode, ToggleImageMode))
+import Models exposing (Model, Msg(..))
 
 
 preferencesView : Model -> Html Msg
@@ -15,8 +15,8 @@ preferencesView { settings } =
             ]
         , renderCheckBox settings.gifMode ToggleGifMode "toggleGifMode" "Only Gifs"
         , renderCheckBox settings.imageMode ToggleImageMode "toggleImageMode" "Image mode"
-        , renderCheckBox settings.autoPlayGif ToggleImageMode "toggleAutoPlayGifs" "Auto play gifs"
-        , renderCheckBox settings.adultMode ToggleImageMode "toggleAdultMode" "18+"
+        , renderCheckBox settings.autoPlayGif ToggleAutoPlayMode "toggleAutoPlayGifs" "Auto play gifs"
+        , renderCheckBox settings.adultMode ToggleAdultMode "toggleAdultMode" "18+"
         , button [ onClick SavePreferences, class "btn btn-outline-success" ] [ text "Save" ]
         ]
 

@@ -95,9 +95,8 @@ renderMedia ( sub, post, settings ) =
                     renderIframe post.iframe
             in
             if isGif post then
-                if settings.gifMode then
+                if settings.autoPlayGif  then
                     ( render_iframe, render_iframe )
-
                 else
                     ( image_thumbnail, render_iframe )
 

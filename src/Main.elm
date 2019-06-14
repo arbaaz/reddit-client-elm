@@ -7,7 +7,7 @@ import Dict exposing (Dict)
 import Html exposing (..)
 import Http
 import Json.Decode as Decode exposing (Decoder)
-import Models exposing (Flags, Model, Msg(..), Route(..), setCount, toggleGif, toggleImageMode, toggleSettings)
+import Models exposing (Flags, Model, Msg(..), Route(..), setCount, toggleAdultMode, toggleAutoPlayMode, toggleGif, toggleImageMode, toggleSettings)
 import Navigation exposing (Location, modifyUrl)
 import Routing exposing (parseLocation, routeParser, router)
 
@@ -92,6 +92,12 @@ update msg model =
         ToggleImageMode ->
             ( { model | settings = toggleImageMode model.settings }, Cmd.none )
 
+        ToggleAutoPlayMode ->
+            ( { model | settings = toggleAutoPlayMode model.settings }, Cmd.none )
+
+        ToggleAdultMode ->
+            ( { model | settings = toggleAdultMode model.settings }, Cmd.none )
+
         ToggleSettings field_accessor ->
             ( { model | settings = toggleSettings field_accessor model.settings }, Cmd.none )
 
@@ -130,6 +136,7 @@ initModel route flags =
     }
 
 
+initFlags : Flags
 initFlags =
     { history = [ ( "tinder", "" ) ]
     , settings =
