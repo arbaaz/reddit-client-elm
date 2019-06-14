@@ -10,6 +10,9 @@ import View.ActionBar exposing (actionBar)
 
 homePage : Model -> Html Msg
 homePage model =
+    if model.loading then
+        div [ class "loader" ] []
+    else
     div []
         [ h3 []
             [ text "Interesting Subreddits" ]

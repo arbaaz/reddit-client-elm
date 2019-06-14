@@ -130,13 +130,25 @@ initModel route flags =
     }
 
 
+initFlags =
+    { history = [ ( "tinder", "" ) ]
+    , settings =
+        { count = "10"
+        , gifMode = False
+        , imageMode = True
+        , autoPlayGif = False
+        , adultMode = False
+        }
+    }
+
+
 init : Decode.Value -> Location -> ( Model, Cmd Msg )
-init initFlags location =
+init initFlagsLocal location =
     let
         flags =
-            case Decode.decodeValue flagsDecoder initFlags of
+            case Decode.decodeValue flagsDecoder initFlagsLocal of
                 Err _ ->
-                    Debug.crash "gracefully handle complete failure"
+                    log "InitFlags decoding failed" initFlags
 
                 Ok model ->
                     log "flags" model

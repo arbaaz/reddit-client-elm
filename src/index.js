@@ -25,6 +25,14 @@ app.ports.toGoogleAnalytics.subscribe(function(str) {
 });
 
 app.ports.setStorage.subscribe(function(history) {
+  history.history = history.history.reduce((acc, [k, v]) => {
+    if (k !== '') {
+      acc[k] = v;
+    }
+
+    return acc;
+  }, {});
+
   console.log('History', history);
   localStorage.setItem('persistModel', JSON.stringify(history));
 });

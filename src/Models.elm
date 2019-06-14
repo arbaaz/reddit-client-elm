@@ -103,13 +103,6 @@ type alias Flags =
 
 
 
--- type alias History =
---     { query : String
---     , after : String
---     , score : Int
---     }
-
-
 type alias Model =
     { children : PostList
     , query : String
