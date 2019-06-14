@@ -1,4 +1,4 @@
-module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), Settings, SubReddit, setCount, toggleGif, toggleImageMode)
+module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), Settings, SubReddit, setCount, toggleGif, toggleImageMode, toggleSettings)
 
 import Dict exposing (Dict)
 import Http
@@ -15,6 +15,7 @@ type Msg
     | SavePreferences
     | ToggleGifMode
     | ToggleImageMode
+    | ToggleSettings String
     | CountPerPage String
 
 
@@ -28,8 +29,14 @@ toggleGif settings =
     { settings | gifMode = not settings.gifMode }
 
 
+toggleImageMode : Settings -> Settings
 toggleImageMode settings =
     { settings | imageMode = not settings.imageMode }
+
+
+toggleSettings : String -> Settings -> Settings
+toggleSettings field_accessor settings =
+    settings
 
 
 type PostHint
