@@ -38,22 +38,6 @@ settingsDecoder =
         |> optional "adultMode" bool False
 
 
-arrayAsTuple2 : Decoder a -> Decoder b -> Decoder ( a, b )
-arrayAsTuple2 a b =
-    index 0 a
-        |> andThen
-            (\aVal ->
-                index 1 b
-                    |> andThen (\bVal -> JD.succeed ( aVal, bVal ))
-            )
-
-
-
--- historyDecoder : Decoder SearchHistory
--- historyDecoder =
---     map2 (,) (index 0 string) (index 1 string)
-
-
 flagsDecoder : Decoder Flags
 flagsDecoder =
     decode Flags

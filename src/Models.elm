@@ -1,4 +1,4 @@
-module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), SearchHistory, Settings, SubReddit, setCount, toggleAdultMode, toggleAutoPlayMode, toggleGif, toggleImageMode, toggleSettings)
+module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), SearchHistory, Settings, SubReddit)
 
 import Dict exposing (Dict)
 import Http
@@ -17,38 +17,7 @@ type Msg
     | ToggleImageMode
     | ToggleAutoPlayMode
     | ToggleAdultMode
-    | ToggleSettings String
     | CountPerPage String
-
-
-setCount : String -> Settings -> Settings
-setCount count settings =
-    { settings | count = count }
-
-
-toggleGif : Settings -> Settings
-toggleGif settings =
-    { settings | gifMode = not settings.gifMode }
-
-
-toggleImageMode : Settings -> Settings
-toggleImageMode settings =
-    { settings | imageMode = not settings.imageMode }
-
-
-toggleAdultMode : Settings -> Settings
-toggleAdultMode settings =
-    { settings | adultMode = not settings.adultMode }
-
-
-toggleAutoPlayMode : Settings -> Settings
-toggleAutoPlayMode settings =
-    { settings | autoPlayGif = not settings.autoPlayGif }
-
-
-toggleSettings : String -> Settings -> Settings
-toggleSettings field_accessor settings =
-    settings
 
 
 type PostHint
