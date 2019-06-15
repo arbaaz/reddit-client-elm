@@ -20,6 +20,17 @@ type Msg
     | CountPerPage String
 
 
+
+-- Todo: Settings Msg
+-- type SettingsMsg
+--     = SavePreferences
+--     | ToggleGifMode
+--     | ToggleImageMode
+--     | ToggleAutoPlayMode
+--     | ToggleAdultMode
+--     | CountPerPage String
+
+
 type PostHint
     = Video
     | Image
