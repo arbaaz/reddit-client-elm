@@ -1,7 +1,7 @@
-module Update.Settings exposing (countPerPage, savePreferences, toggleAdultMode, toggleAutoPlayMode, toggleGifMode, toggleImageMode)
+module Update.Settings exposing (countPerPage, deleteHistory, savePreferences, toggleAdultMode, toggleAutoPlayMode, toggleGifMode, toggleImageMode)
 
 import Dict exposing (Dict)
-import Models exposing (Model, Msg)
+import Models exposing (Model, Msg, SubReddit)
 import Navigation exposing (modifyUrl)
 import Update.Port exposing (setStorage, toGoogleAnalytics)
 
@@ -54,3 +54,12 @@ toggleAdultMode model =
 savePreferences : Model -> ( Model, Cmd Msg )
 savePreferences model =
     ( model, Cmd.batch [ modifyUrl ("#r/" ++ model.query), setStorage { history = Dict.toList model.history, settings = model.settings } ] )
+
+
+deleteHistory : SubReddit -> Model -> ( Model, Cmd Msg )
+deleteHistory sub model =
+    let
+        history =
+            Dict.remove sub model.history
+    in
+    ( { model | history = history }, setStorage { history = Dict.toList history, settings = model.settings } )

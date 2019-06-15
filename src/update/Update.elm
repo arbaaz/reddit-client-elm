@@ -1,12 +1,9 @@
 module Update.Update exposing (update)
 
-import Api exposing (fetchPosts)
-import Dict exposing (Dict)
-import Models exposing (Flags, Model, Msg(..), Route(..))
-import Navigation exposing (Location, modifyUrl)
+import Models exposing (Model, Msg(..))
 import Update.Location
-import Update.Port exposing (setStorage)
 import Update.Posts
+import Update.Query
 import Update.Settings
 
 
@@ -25,16 +22,11 @@ update msg model =
         FetchPosts ->
             Update.Posts.fetchPost model
 
-        -- ( newModel, Cmd.none )
         RecordQuery query ->
-            ( { model | query = query }, Cmd.none )
+            Update.Query.recordQuery query model
 
         FetchRandNsfw ->
-            let
-                newModel =
-                    { model | query = "randnsfw", loading = True }
-            in
-            ( newModel, fetchPosts newModel )
+            Update.Query.fetchRandNsfw model
 
         SavePreferences ->
             Update.Settings.savePreferences model
@@ -55,8 +47,4 @@ update msg model =
             Update.Settings.toggleAdultMode model
 
         DeleteHistory sub ->
-            let
-                history =
-                    Dict.remove sub model.history
-            in
-            ( { model | history = history }, setStorage { history = Dict.toList history, settings = model.settings } )
+            Update.Settings.deleteHistory sub model
