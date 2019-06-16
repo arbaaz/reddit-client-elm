@@ -1,12 +1,13 @@
 module Main exposing (main)
 
-import Api exposing (fetchPosts)
 -- import Debug exposing (log)
+
+import Api exposing (fetchPosts)
 import Decode exposing (flagsDecoder)
 import Dict exposing (Dict)
 import Html exposing (..)
 import Json.Decode as Decode exposing (Decoder)
-import Models exposing (Flags, Model, Msg(OnLocationChange), Route)
+import Models exposing (Flags, Model, Msg(OnLocationChange), Route(SubRedditRoute))
 import Navigation exposing (Location)
 import Routing exposing (parseLocation, routeParser, router)
 import Update.Update exposing (update)
@@ -69,7 +70,12 @@ init initFlagsLocal location =
         model =
             initModel currentRoute flags
     in
-    ( model, Cmd.none )
+    case currentRoute of
+        SubRedditRoute sub ->
+            ( model, fetchPosts model )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 main : Program Decode.Value Model Msg

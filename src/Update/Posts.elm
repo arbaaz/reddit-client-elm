@@ -30,7 +30,7 @@ postSuccess response model =
                 , error = ""
             }
     in
-    ( newModel, Cmd.batch [ modifyUrl ("#r/" ++ response.subreddit), setStorage { history = Dict.toList newModel.history, settings = newModel.settings } ] )
+    ( newModel, Cmd.batch [setStorage { history = Dict.toList newModel.history, settings = newModel.settings } ] )
 
 
 postFail : Http.Error -> Model -> ( Model, Cmd Msg )

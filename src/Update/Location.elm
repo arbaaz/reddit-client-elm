@@ -16,7 +16,7 @@ onLocationChange location model =
             routeParser newRoute
     in
     case ( model.route, newRoute ) of
-        ( Home, SubRedditRoute sub ) ->
+        ( _, SubRedditRoute sub ) ->
             let
                 newModel =
                     { model | route = newRoute, query = query, loading = True }
@@ -24,4 +24,8 @@ onLocationChange location model =
             ( newModel, fetchPosts newModel )
 
         _ ->
-            ( { model | route = newRoute }, Cmd.none )
+            let
+                newModel =
+                    { model | route = newRoute, query = query }
+            in
+            ( newModel, Cmd.none )
