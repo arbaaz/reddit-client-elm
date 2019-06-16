@@ -71,6 +71,8 @@ init initFlagsLocal location =
             initModel currentRoute flags
     in
     case currentRoute of
+        PostRoute sub id ->
+            ( model, fetchPosts model )
         SubRedditRoute sub ->
             ( model, fetchPosts model )
 
