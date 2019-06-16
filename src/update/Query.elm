@@ -1,16 +1,12 @@
 module Update.Query exposing (fetchRandNsfw, recordQuery)
 
-import Api exposing (fetchPosts)
 import Models exposing (Model, Msg)
+import Navigation exposing (modifyUrl)
 
 
 fetchRandNsfw : Model -> ( Model, Cmd Msg )
 fetchRandNsfw model =
-    let
-        newModel =
-            { model | query = "randnsfw", loading = True }
-    in
-    ( newModel, fetchPosts newModel )
+    ( { model | loading = True }, Cmd.batch [ modifyUrl "#r/randnsfw" ] )
 
 
 recordQuery : String -> Model -> ( Model, Cmd Msg )

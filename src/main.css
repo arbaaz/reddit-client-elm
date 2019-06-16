@@ -12,7 +12,13 @@ body {
   margin: 0 auto;
 }
 
+.loader-container {
+  height: 100vh;
+}
+
 .loader {
+  position: relative;
+  top: 40%;
   border: 16px solid #f3f3f3; /* Light grey */
   border-top: 16px solid #3498db; /* Blue */
   border-radius: 50%;

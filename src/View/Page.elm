@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Models exposing (Model, Msg)
 import View.ActionBar exposing (actionBar)
+import View.Loader exposing (loader)
 import View.Post exposing (isGif, renderPosts)
 
 
@@ -36,8 +37,9 @@ page model =
     div
         [ id "outer" ]
         [ if model.loading then
-            div [ class "loader" ] []
-        else
+            loader
+
+          else
             inner
         , div [] [ text model.error ]
         ]

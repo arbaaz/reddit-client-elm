@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Api exposing (fetchPosts)
-import Debug exposing (log)
+-- import Debug exposing (log)
 import Decode exposing (flagsDecoder)
 import Dict exposing (Dict)
 import Html exposing (..)
@@ -58,7 +58,7 @@ init initFlagsLocal location =
         flags =
             case Decode.decodeValue flagsDecoder initFlagsLocal of
                 Err _ ->
-                    log "InitFlags decoding failed" initFlags
+                    initFlags
 
                 Ok val ->
                     val
@@ -69,7 +69,7 @@ init initFlagsLocal location =
         model =
             initModel currentRoute flags
     in
-    ( model, fetchPosts model )
+    ( model, Cmd.none )
 
 
 main : Program Decode.Value Model Msg

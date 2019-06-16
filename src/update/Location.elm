@@ -19,7 +19,7 @@ onLocationChange location model =
         ( Home, SubRedditRoute sub ) ->
             let
                 newModel =
-                    { model | route = newRoute, query = query }
+                    { model | route = newRoute, query = query, loading = True }
             in
             ( newModel, fetchPosts newModel )
 

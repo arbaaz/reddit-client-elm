@@ -2,7 +2,7 @@ import './main.css';
 import { Main } from './Main.elm';
 import registerServiceWorker from './registerServiceWorker';
 
-const storedState = localStorage.getItem('persistModel') || {};
+const storedState = localStorage.getItem('persistModel') || '{}';
 const initialState = JSON.parse(storedState);
 const app = Main.embed(document.getElementById('root'), initialState);
 

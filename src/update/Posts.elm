@@ -3,7 +3,7 @@ module Update.Posts exposing (fetchPost, postFail, postSuccess)
 import Api exposing (fetchPosts)
 import Dict exposing (Dict)
 import Http
-import Models exposing (Model, Msg, Response)
+import Models exposing (Model, Msg, Response, Route(SubRedditRoute))
 import Navigation exposing (modifyUrl)
 import Update.Port exposing (setStorage, toGoogleAnalytics)
 

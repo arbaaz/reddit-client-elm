@@ -6,12 +6,13 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Models exposing (Model, Msg(..))
 import View.ActionBar exposing (actionBar)
+import View.Loader exposing (loader)
 
 
 homePage : Model -> Html Msg
 homePage model =
     if model.loading then
-        div [ class "loader" ] []
+        loader
     else
     div []
         [ h3 []
