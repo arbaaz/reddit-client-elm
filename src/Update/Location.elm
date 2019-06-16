@@ -14,18 +14,16 @@ onLocationChange location model =
 
         query =
             routeParser newRoute
+
+        newModel =
+            { model | route = newRoute, query = query, loading = True }
     in
     case ( model.route, newRoute ) of
-        ( _, SubRedditRoute sub ) ->
-            let
-                newModel =
-                    { model | route = newRoute, query = query, loading = True }
-            in
+        ( Home, SubRedditRoute sub ) ->
+            ( newModel, fetchPosts newModel )
+
+        ( SubRedditRoute oldSub, SubRedditRoute newSub ) ->
             ( newModel, fetchPosts newModel )
 
         _ ->
-            let
-                newModel =
-                    { model | route = newRoute, query = query }
-            in
-            ( newModel, Cmd.none )
+            ( { newModel | loading = False }, Cmd.none )
