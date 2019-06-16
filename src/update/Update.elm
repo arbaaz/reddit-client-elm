@@ -31,20 +31,12 @@ update msg model =
         SavePreferences ->
             Update.Settings.savePreferences model
 
-        CountPerPage count ->
-            Update.Settings.countPerPage count model
-
-        ToggleGifMode ->
-            Update.Settings.toggleGifMode model
-
-        ToggleImageMode ->
-            Update.Settings.toggleImageMode model
-
-        ToggleAutoPlayMode ->
-            Update.Settings.toggleAutoPlayMode model
-
-        ToggleAdultMode ->
-            Update.Settings.toggleAdultMode model
-
         DeleteHistory sub ->
             Update.Settings.deleteHistory sub model
+
+        SettingsAction action ->
+            let
+                ( settings, cmd ) =
+                    Update.Settings.update action model.settings
+            in
+            ( { model | settings = settings }, cmd )

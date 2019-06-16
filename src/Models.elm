@@ -1,4 +1,4 @@
-module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), SearchHistory, Settings, SubReddit)
+module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), SearchHistory, Settings, SettingsMsg(..), SubReddit)
 
 import Dict exposing (Dict)
 import Http
@@ -10,25 +10,18 @@ type Msg
     | FetchPosts
     | RecordQuery String
     | OnLocationChange Location
-    | DeleteHistory String
     | FetchRandNsfw
     | SavePreferences
-    | ToggleGifMode
+    | DeleteHistory String
+    | SettingsAction SettingsMsg
+
+
+type SettingsMsg
+    = ToggleGifMode
     | ToggleImageMode
     | ToggleAutoPlayMode
     | ToggleAdultMode
     | CountPerPage String
-
-
-
--- Todo: Settings Msg
--- type SettingsMsg
---     = SavePreferences
---     | ToggleGifMode
---     | ToggleImageMode
---     | ToggleAutoPlayMode
---     | ToggleAdultMode
---     | CountPerPage String
 
 
 type PostHint
