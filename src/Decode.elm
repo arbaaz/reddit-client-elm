@@ -61,5 +61,5 @@ settingsDecoder =
 flagsDecoder : Decoder Flags
 flagsDecoder =
     decode Flags
-        |> optional "history" (keyValuePairs string) [ ( "", "" ) ]
+        |> optional "history" (keyValuePairs string) [ ( "tinder", "" ) ]
         |> required "settings" settingsDecoder

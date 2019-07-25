@@ -7,7 +7,7 @@ import Decode exposing (flagsDecoder)
 import Dict exposing (Dict)
 import Html exposing (..)
 import Json.Decode as Decode exposing (Decoder)
-import Models exposing (Flags, Model, Msg(OnLocationChange), Route(SubRedditRoute, PostRoute))
+import Models exposing (Flags, Model, Msg(OnLocationChange), Route(PostRoute, SubRedditRoute))
 import Navigation exposing (Location)
 import Routing exposing (parseLocation, routeParser, router)
 import Update.Update exposing (update)
@@ -73,6 +73,7 @@ init initFlagsLocal location =
     case currentRoute of
         PostRoute sub id ->
             ( model, fetchPosts model )
+
         SubRedditRoute sub ->
             ( model, fetchPosts model )
 
