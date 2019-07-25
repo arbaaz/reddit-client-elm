@@ -28,7 +28,7 @@ buildRoutePath ( sub, id ) =
 isGif : Post -> Bool
 isGif post =
     case post.postHint of
-        "rich:video" ->
+        Gif ->
             True
 
         _ ->
@@ -95,8 +95,9 @@ renderMedia ( sub, post, settings ) =
                     renderIframe post.iframe
             in
             if isGif post then
-                if settings.autoPlayGif  then
+                if settings.autoPlayGif then
                     ( render_iframe, render_iframe )
+
                 else
                     ( image_thumbnail, render_iframe )
 
@@ -105,7 +106,7 @@ renderMedia ( sub, post, settings ) =
 
         anchor_attr =
             case post.postHint of
-                "link" ->
+                Link ->
                     [ class "wiggle", href post.url, target "_blank" ]
 
                 _ ->

@@ -29,6 +29,7 @@ type PostHint
     | Image
     | Link
     | Unknown
+    | Gif
 
 
 type alias Post =
@@ -37,7 +38,7 @@ type alias Post =
     , postUrl : String
     , title : String
     , ups : Int
-    , postHint : String
+    , postHint : PostHint
     , source : String
     , iframe : String
     , url : String

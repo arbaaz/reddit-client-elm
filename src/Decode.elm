@@ -2,7 +2,27 @@ module Decode exposing (flagsDecoder, postDecoder, postsDecoder)
 
 import Json.Decode as JD exposing (Decoder, andThen, bool, index, int, keyValuePairs, list, map2, string)
 import Json.Decode.Pipeline exposing (decode, optional, required)
-import Models exposing (Flags, Post, PostList, Response, SearchHistory, Settings)
+import Models exposing (Flags, Post, PostHint(..), PostList, Response, SearchHistory, Settings)
+
+
+postHintDecoder : Decoder PostHint
+postHintDecoder =
+    string
+        |> JD.andThen
+            (\str ->
+                case str of
+                    "rich:video" ->
+                        JD.succeed Gif
+
+                    "link" ->
+                        JD.succeed Link
+
+                    "image" ->
+                        JD.succeed Image
+
+                    _ ->
+                        JD.succeed Unknown
+            )
 
 
 postDecoder : Decoder Post
@@ -13,7 +33,7 @@ postDecoder =
         |> required "permalink" string
         |> required "title" string
         |> required "ups" int
-        |> optional "post_hint" string "none"
+        |> required "post_hint" postHintDecoder
         |> optional "preview" string ""
         |> optional "media_embed" string ""
         |> optional "url" string ""
