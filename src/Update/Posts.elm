@@ -1,10 +1,11 @@
 module Update.Posts exposing (fetchPost, postFail, postSuccess)
 
+-- import Navigation exposing (modifyUrl)
+
 import Api exposing (fetchPosts)
 import Dict exposing (Dict)
 import Http
-import Models exposing (Model, Msg, Response, Route(SubRedditRoute))
-import Navigation exposing (modifyUrl)
+import Models exposing (Model, Msg, Response, Route(..))
 import Update.Port exposing (setStorage, toGoogleAnalytics)
 
 
@@ -37,10 +38,10 @@ postFail : Http.Error -> Model -> ( Model, Cmd Msg )
 postFail err model =
     case err of
         Http.BadStatus status ->
-            ( { model | loading = False, error = toString status.status.message }, Cmd.none )
+            ( { model | loading = False, error = Debug.toString status }, Cmd.none )
 
-        Http.BadPayload message response ->
-            ( { model | loading = False, error = toString message }, Cmd.none )
+        Http.BadBody message ->
+            ( { model | loading = False, error = Debug.toString message }, Cmd.none )
 
         _ ->
             ( { model | loading = False, error = "Something went wrong" }, Cmd.none )

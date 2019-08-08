@@ -1,9 +1,12 @@
-module Routing exposing (matchers, parseLocation, routeParser, router)
+module Routing exposing (matchers, routeParser, router)
+
+-- import UrlParser exposing (..)
+-- import Navigation exposing (Location)
 
 import Html exposing (Html)
 import Models exposing (Model, Msg(..), Route(..))
-import Navigation exposing (Location)
-import UrlParser exposing (..)
+import Url
+import Url.Parser exposing ((</>), Parser, int, map, oneOf, s, string)
 import View.HomePage exposing (homePage)
 import View.NotFound exposing (notFoundView)
 import View.Page exposing (page)
@@ -20,14 +23,14 @@ matchers =
         ]
 
 
-parseLocation : Location -> Route
-parseLocation location =
-    case parseHash matchers location of
-        Just route ->
-            route
 
-        Nothing ->
-            Home
+-- parseLocation : Url.Url -> Route
+-- parseLocation url =
+--     case matchers url of
+--         Just route ->
+--             route
+--         Nothing ->
+--             Home
 
 
 router : Model -> Html Msg

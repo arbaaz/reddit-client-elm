@@ -20,17 +20,10 @@ host =
 
 request : String -> Cmd Msg
 request url =
-    Http.send Posts
-        (Http.request
-            { method = "GET"
-            , headers = []
-            , url = url
-            , body = Http.emptyBody
-            , expect = Http.expectJson postsDecoder
-            , timeout = Nothing
-            , withCredentials = False
-            }
-        )
+    Http.get
+        { expect = Http.expectJson Posts postsDecoder
+        , url = url
+        }
 
 
 buildUrl : Model -> String

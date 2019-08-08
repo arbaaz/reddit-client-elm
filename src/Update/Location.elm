@@ -1,16 +1,20 @@
 module Update.Location exposing (onLocationChange)
 
+-- import Navigation exposing (Location)
+
 import Api exposing (fetchPosts)
 import Models exposing (Model, Msg(..), Route(..))
-import Navigation exposing (Location)
-import Routing exposing (parseLocation, routeParser, router)
+import Routing exposing (routeParser, router)
+import Url
 
 
-onLocationChange : Location -> Model -> ( Model, Cmd Msg )
-onLocationChange location model =
+onLocationChange : Url.Url -> Model -> ( Model, Cmd Msg )
+onLocationChange url model =
     let
+        -- newRoute =
+        --     parseLocation location
         newRoute =
-            parseLocation location
+            NotFoundRoute
 
         query =
             routeParser newRoute
