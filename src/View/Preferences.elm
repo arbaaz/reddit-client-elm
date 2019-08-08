@@ -2,8 +2,9 @@ module View.Preferences exposing (preferencesView)
 
 import Html exposing (..)
 import Html.Attributes as HA exposing (..)
-import Html.Events exposing (on, onClick, onInput, onWithOptions)
+import Html.Events exposing (on, onClick, onInput)
 import Models exposing (Model, Msg(..), SettingsMsg(..))
+
 
 preferencesView : Model -> Html Msg
 preferencesView { settings } =

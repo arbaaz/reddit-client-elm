@@ -1,10 +1,14 @@
 import './main.css';
-import { Main } from './Main.elm';
+import { Elm } from './Main.elm';
 import registerServiceWorker from './registerServiceWorker';
 
 const storedState = localStorage.getItem('persistModel') || '{}';
 const initialState = JSON.parse(storedState);
-const app = Main.embed(document.getElementById('root'), initialState);
+
+const app = Elm.Main.init({
+  node: document.getElementById('root'),
+  flags: initialState
+});
 
 app.ports.toGoogleAnalytics.subscribe(function(str) {
   gtag('event', 'search', {

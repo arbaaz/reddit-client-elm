@@ -1,22 +1,27 @@
 module Main exposing (main)
 
--- import Debug exposing (log)
-
 import Api exposing (fetchPosts)
+import Browser
+import Browser.Navigation as Nav
+import Debug
 import Decode exposing (flagsDecoder)
 import Dict exposing (Dict)
 import Html exposing (..)
 import Json.Decode as Decode exposing (Decoder)
-import Models exposing (Flags, Model, Msg(OnLocationChange), Route(PostRoute, SubRedditRoute))
-import Navigation exposing (Location)
-import Routing exposing (parseLocation, routeParser, router)
+import Models exposing (Flags, Model, Msg(..), Route(..))
+import Routing exposing (routeParser, router)
 import Update.Update exposing (update)
+import Url
 
 
-view : Model -> Html Msg
+view : Model -> Browser.Document Msg
 view model =
-    div []
-        [ router model ]
+    { title = "Reddit"
+    , body =
+        [ div []
+            [ router model ]
+        ]
+    }
 
 
 subscriptions : Model -> Sub Msg
@@ -24,8 +29,8 @@ subscriptions model =
     Sub.none
 
 
-initModel : Route -> Flags -> Model
-initModel route flags =
+initModel : Url.Url -> Nav.Key -> Route -> Flags -> Model
+initModel url key route flags =
     { children = []
     , query = routeParser route
     , error = ""
@@ -37,6 +42,8 @@ initModel route flags =
     , history = Dict.fromList flags.history
     , mode = "on"
     , settings = flags.settings
+    , key = key
+    , url = url
     }
 
 
@@ -53,8 +60,8 @@ initFlags =
     }
 
 
-init : Decode.Value -> Location -> ( Model, Cmd Msg )
-init initFlagsLocal location =
+init : Decode.Value -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init initFlagsLocal url key =
     let
         flags =
             case Decode.decodeValue flagsDecoder initFlagsLocal of
@@ -64,28 +71,42 @@ init initFlagsLocal location =
                 Ok val ->
                     val
 
-        currentRoute =
-            Routing.parseLocation location
-
         model =
-            initModel currentRoute flags
+            initModel url key Home flags
     in
-    case currentRoute of
-        PostRoute sub id ->
-            ( model, fetchPosts model )
+    ( model, Cmd.none )
 
-        SubRedditRoute sub ->
-            ( model, fetchPosts model )
 
-        _ ->
-            ( model, Cmd.none )
+
+-- init initFlagsLocal location =
+--     let
+--         flags =
+--             case Decode.decodeValue flagsDecoder initFlagsLocal of
+--                 Err _ ->
+--                     initFlags
+--                 Ok val ->
+--                     val
+--         currentRoute =
+--             Routing.parseLocation location
+--         model =
+--             initModel currentRoute flags
+--     in
+--     case currentRoute of
+--         PostRoute sub id ->
+--             ( model, fetchPosts model )
+--         SubRedditRoute sub ->
+--             ( model, fetchPosts model )
+--         _ ->
+--             ( model, Cmd.none )
 
 
 main : Program Decode.Value Model Msg
 main =
-    Navigation.programWithFlags OnLocationChange
+    Browser.application
         { init = init
+        , onUrlChange = UrlChanged
+        , onUrlRequest = LinkClicked
+        , subscriptions = subscriptions
         , update = update
         , view = view
-        , subscriptions = subscriptions
         }

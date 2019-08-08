@@ -1,8 +1,11 @@
 module Update.Settings exposing (deleteHistory, savePreferences, update)
 
+-- import Navigation exposing (modifyUrl)
+
+import Browser
+import Browser.Navigation as Nav
 import Dict exposing (Dict)
 import Models exposing (Model, Msg, Settings, SettingsMsg(..), SubReddit)
-import Navigation exposing (modifyUrl)
 import Update.Port exposing (setStorage, toGoogleAnalytics)
 
 
@@ -27,7 +30,7 @@ update msg settings =
 
 savePreferences : Model -> ( Model, Cmd Msg )
 savePreferences model =
-    ( model, Cmd.batch [ modifyUrl ("#r/" ++ model.query), setStorage { history = Dict.toList model.history, settings = model.settings } ] )
+    ( model, Cmd.batch [ Nav.pushUrl model.key ("#r/" ++ model.query), setStorage { history = Dict.toList model.history, settings = model.settings } ] )
 
 
 deleteHistory : SubReddit -> Model -> ( Model, Cmd Msg )

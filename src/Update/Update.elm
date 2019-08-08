@@ -1,17 +1,28 @@
 module Update.Update exposing (update)
 
+import Browser
+import Browser.Navigation as Nav
 import Models exposing (Model, Msg(..))
 import Update.Location
 import Update.Posts
 import Update.Query
 import Update.Settings
+import Url
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        OnLocationChange location ->
-            Update.Location.onLocationChange location model
+        UrlChanged url ->
+            Update.Location.onLocationChange url model
+
+        LinkClicked urlRequest ->
+            case urlRequest of
+                Browser.Internal url ->
+                    ( model, Nav.pushUrl model.key (Url.toString url) )
+
+                Browser.External href ->
+                    ( model, Nav.load href )
 
         Posts (Ok x) ->
             Update.Posts.postSuccess x model

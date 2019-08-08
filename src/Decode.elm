@@ -1,7 +1,7 @@
 module Decode exposing (flagsDecoder, postDecoder, postsDecoder)
 
 import Json.Decode as JD exposing (Decoder, andThen, bool, index, int, keyValuePairs, list, map2, string)
-import Json.Decode.Pipeline exposing (decode, optional, required)
+import Json.Decode.Pipeline exposing (optional, required)
 import Models exposing (Flags, Post, PostHint(..), PostList, Response, SearchHistory, Settings)
 
 
@@ -27,7 +27,7 @@ postHintDecoder =
 
 postDecoder : Decoder Post
 postDecoder =
-    decode Post
+    JD.succeed Post
         |> required "id" string
         |> optional "preview" string ""
         |> required "permalink" string
@@ -41,7 +41,7 @@ postDecoder =
 
 postsDecoder : Decoder Response
 postsDecoder =
-    decode Response
+    JD.succeed Response
         |> required "children" (JD.list postDecoder)
         |> optional "after" string ""
         |> optional "before" string ""
@@ -50,7 +50,7 @@ postsDecoder =
 
 settingsDecoder : Decoder Settings
 settingsDecoder =
-    decode Settings
+    JD.succeed Settings
         |> optional "count" string "10"
         |> optional "gifMode" bool False
         |> optional "imageMode" bool True
@@ -60,6 +60,6 @@ settingsDecoder =
 
 flagsDecoder : Decoder Flags
 flagsDecoder =
-    decode Flags
+    JD.succeed Flags
         |> optional "history" (keyValuePairs string) [ ( "tinder", "" ) ]
         |> required "settings" settingsDecoder

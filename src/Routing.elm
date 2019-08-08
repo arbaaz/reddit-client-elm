@@ -1,33 +1,33 @@
-module Routing exposing (matchers, parseLocation, routeParser, router)
+module Routing exposing (fromUrl, parser, routeParser, router)
+
+-- import UrlParser exposing (..)
+-- import Navigation exposing (Location)
 
 import Html exposing (Html)
 import Models exposing (Model, Msg(..), Route(..))
-import Navigation exposing (Location)
-import UrlParser exposing (..)
+import Url
+import Url.Parser as Parser exposing ((</>), Parser, int, map, oneOf, s, string, top)
 import View.HomePage exposing (homePage)
 import View.NotFound exposing (notFoundView)
 import View.Page exposing (page)
 import View.Preferences exposing (preferencesView)
 
 
-matchers : Parser (Route -> a) a
-matchers =
+parser : Parser (Route -> a) a
+parser =
     oneOf
-        [ map PostRoute (s "r" </> string </> string)
+        [ map Home top
+        , map PostRoute (s "r" </> string </> string)
         , map SubRedditRoute (s "r" </> string)
-        , map Home (s "home")
         , map Preferences (s "preferences")
         ]
 
 
-parseLocation : Location -> Route
-parseLocation location =
-    case parseHash matchers location of
-        Just route ->
-            route
-
-        Nothing ->
-            Home
+fromUrl : Url.Url -> Route
+fromUrl url =
+    { url | path = Maybe.withDefault "" url.fragment, fragment = Nothing }
+        |> Parser.parse parser
+        |> Maybe.withDefault Home
 
 
 router : Model -> Html Msg

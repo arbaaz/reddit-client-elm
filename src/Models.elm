@@ -1,19 +1,26 @@
 module Models exposing (Flags, Mode, Model, Msg(..), Post, PostHint(..), PostId, PostList, Response, Route(..), SearchHistory, Settings, SettingsMsg(..), SubReddit)
 
+import Browser
+import Browser.Navigation as Nav
 import Dict exposing (Dict)
 import Http
-import Navigation exposing (Location)
+import Url
+
+
+
+-- import Navigation exposing (Location)
 
 
 type Msg
     = Posts (Result Http.Error Response)
     | FetchPosts
     | RecordQuery String
-    | OnLocationChange Location
     | FetchRandNsfw
     | SavePreferences
     | DeleteHistory String
     | SettingsAction SettingsMsg
+    | LinkClicked Browser.UrlRequest
+    | UrlChanged Url.Url
 
 
 type SettingsMsg
@@ -46,10 +53,10 @@ type alias Post =
 
 
 type Route
-    = PostRoute SubReddit PostId
+    = Home
+    | PostRoute SubReddit PostId
     | SubRedditRoute SubReddit
     | NotFoundRoute
-    | Home
     | Preferences
 
 
@@ -100,6 +107,8 @@ type alias Model =
     , route : Route
     , mode : Mode
     , settings : Settings
+    , key : Nav.Key
+    , url : Url.Url
     }
 
 

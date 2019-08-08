@@ -1,5 +1,6 @@
 module View.Post exposing (buildRoutePath, hasPreview, isGif, redditPath, renderMedia, renderPost, renderPosts, urlDecode)
 
+import Debug
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Models exposing (Mode, Post, PostHint(..), PostId, PostList, Settings, SubReddit)
@@ -56,7 +57,7 @@ renderPost ( sub, post, settings ) =
                     [ div
                         [ class "card" ]
                         [ div [ class "post-hint" ]
-                            [ text (toString post.postHint) ]
+                            [ text (Debug.toString post.postHint) ]
                         , image_view
                         ]
                     ]
@@ -69,7 +70,7 @@ renderPost ( sub, post, settings ) =
                     [ a [ href ("#" ++ post_path) ]
                         [ text post.title ]
                     , div [ class "post-hint" ]
-                        [ text (toString post.postHint) ]
+                        [ text (Debug.toString post.postHint) ]
                     , image_view
                     , a [ href (redditPath post.postUrl) ] [ text "open in reddit" ]
                     ]
