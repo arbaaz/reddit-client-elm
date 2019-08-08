@@ -30,7 +30,7 @@ postSuccess response model =
                 , error = ""
             }
     in
-    ( newModel, Cmd.batch [setStorage { history = Dict.toList newModel.history, settings = newModel.settings } ] )
+    ( newModel, Cmd.batch [ setStorage { history = Dict.toList newModel.history, settings = newModel.settings } ] )
 
 
 postFail : Http.Error -> Model -> ( Model, Cmd Msg )
@@ -38,6 +38,9 @@ postFail err model =
     case err of
         Http.BadStatus status ->
             ( { model | loading = False, error = toString status.status.message }, Cmd.none )
+
+        Http.BadPayload message response ->
+            ( { model | loading = False, error = toString message }, Cmd.none )
 
         _ ->
             ( { model | loading = False, error = "Something went wrong" }, Cmd.none )

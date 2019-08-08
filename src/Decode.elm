@@ -33,7 +33,7 @@ postDecoder =
         |> required "permalink" string
         |> required "title" string
         |> required "ups" int
-        |> required "post_hint" postHintDecoder
+        |> optional "post_hint" postHintDecoder Unknown
         |> optional "preview" string ""
         |> optional "media_embed" string ""
         |> optional "url" string ""
