@@ -53,10 +53,10 @@ type alias Post =
 
 
 type Route
-    = PostRoute SubReddit PostId
+    = Home
+    | PostRoute SubReddit PostId
     | SubRedditRoute SubReddit
     | NotFoundRoute
-    | Home
     | Preferences
 
 

@@ -16,7 +16,7 @@ import Url
 
 view : Model -> Browser.Document Msg
 view model =
-    { title = "URL Interceptor"
+    { title = "Reddit"
     , body =
         [ div []
             [ router model ]
