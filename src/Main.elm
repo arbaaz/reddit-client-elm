@@ -1,8 +1,5 @@
 module Main exposing (main)
 
--- import Debug exposing (log)
--- import Navigation exposing (Location)
-
 import Api exposing (fetchPosts)
 import Browser
 import Browser.Navigation as Nav

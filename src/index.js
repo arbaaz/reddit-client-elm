@@ -2,6 +2,8 @@ import './main.css';
 import { Main } from './Main.elm';
 import registerServiceWorker from './registerServiceWorker';
 
+console.log('Mian', Main);
+
 const storedState = localStorage.getItem('persistModel') || '{}';
 const initialState = JSON.parse(storedState);
 const app = Main.embed(document.getElementById('root'), initialState);
