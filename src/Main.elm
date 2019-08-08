@@ -62,14 +62,22 @@ initFlags =
     }
 
 
-init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init : Decode.Value -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init initFlagsLocal url key =
     let
         fuckkey =
             Debug.log "key" key
 
+        flags =
+            case Decode.decodeValue flagsDecoder initFlagsLocal of
+                Err _ ->
+                    initFlags
+
+                Ok val ->
+                    val
+
         model =
-            initModel fuckkey Home initFlagsLocal
+            initModel fuckkey Home flags
     in
     ( { model | key = fuckkey }, Cmd.none )
 
@@ -97,7 +105,7 @@ init initFlagsLocal url key =
 --             ( model, Cmd.none )
 
 
-main : Program Flags Model Msg
+main : Program Decode.Value Model Msg
 main =
     Browser.application
         { init = init
