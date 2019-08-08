@@ -32,8 +32,8 @@ subscriptions model =
     Sub.none
 
 
-initModel : Nav.Key -> Route -> Flags -> Model
-initModel key route flags =
+initModel : Url.Url -> Nav.Key -> Route -> Flags -> Model
+initModel url key route flags =
     { children = []
     , query = routeParser route
     , error = ""
@@ -46,6 +46,7 @@ initModel key route flags =
     , mode = "on"
     , settings = flags.settings
     , key = key
+    , url = url
     }
 
 
@@ -65,9 +66,6 @@ initFlags =
 init : Decode.Value -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init initFlagsLocal url key =
     let
-        fuckkey =
-            Debug.log "key" key
-
         flags =
             case Decode.decodeValue flagsDecoder initFlagsLocal of
                 Err _ ->
@@ -77,9 +75,9 @@ init initFlagsLocal url key =
                     val
 
         model =
-            initModel fuckkey Home flags
+            initModel url key Home flags
     in
-    ( { model | key = fuckkey }, Cmd.none )
+    ( model, Cmd.none )
 
 
 

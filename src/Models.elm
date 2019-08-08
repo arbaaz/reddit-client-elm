@@ -108,6 +108,7 @@ type alias Model =
     , mode : Mode
     , settings : Settings
     , key : Nav.Key
+    , url : Url.Url
     }
 
 
