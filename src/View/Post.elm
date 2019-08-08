@@ -21,6 +21,25 @@ hasPreview post =
         True
 
 
+postHintString : PostHint -> String
+postHintString p =
+    case p of
+        Video ->
+            "video"
+
+        Image ->
+            "image"
+
+        Link ->
+            "link"
+
+        Unknown ->
+            "unknown"
+
+        Gif ->
+            "gif"
+
+
 buildRoutePath : ( SubReddit, PostId ) -> String
 buildRoutePath ( sub, id ) =
     "r/" ++ sub ++ "/" ++ id
@@ -57,7 +76,7 @@ renderPost ( sub, post, settings ) =
                     [ div
                         [ class "card" ]
                         [ div [ class "post-hint" ]
-                            [ text (Debug.toString post.postHint) ]
+                            [ text (postHintString post.postHint) ]
                         , image_view
                         ]
                     ]
@@ -70,7 +89,7 @@ renderPost ( sub, post, settings ) =
                     [ a [ href ("#" ++ post_path) ]
                         [ text post.title ]
                     , div [ class "post-hint" ]
-                        [ text (Debug.toString post.postHint) ]
+                        [ text (postHintString post.postHint) ]
                     , image_view
                     , a [ href (redditPath post.postUrl) ] [ text "open in reddit" ]
                     ]
