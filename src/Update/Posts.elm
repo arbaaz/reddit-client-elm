@@ -38,10 +38,10 @@ postFail : Http.Error -> Model -> ( Model, Cmd Msg )
 postFail err model =
     case err of
         Http.BadStatus status ->
-            ( { model | loading = False, error = Debug.toString status }, Cmd.none )
+            ( { model | loading = False, error = String.fromInt status }, Cmd.none )
 
         Http.BadBody message ->
-            ( { model | loading = False, error = Debug.toString message }, Cmd.none )
+            ( { model | loading = False, error = message }, Cmd.none )
 
         _ ->
             ( { model | loading = False, error = "Something went wrong" }, Cmd.none )
